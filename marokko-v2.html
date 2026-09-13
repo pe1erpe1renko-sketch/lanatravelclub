@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Марокко. Имперские города — Lana Travel Club</title>
+<meta name="description" content="Семь дней по имперским городам Марокко: Касабланка, Рабат, Фес, Марракеш, Эссувейра. Авторский подбор — Lana Travel Club.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F5F1;
+  --paper-2:#EFEBE5;
+  --ink:#4A3B34;
+  --body:#4E4842;
+  --muted:#8C847C;
+  --copper:#C9946A;
+  --copper-2:#B8825A;
+  --line:#E3DDD5;
+  --maxw:1040px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--paper);color:var(--body);
+  font-family:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-size:16.5px;line-height:1.7;
+  padding-bottom:84px;
+}
+h1,h2,h3,.serif{font-family:'Playfair Display',Georgia,serif;font-weight:400;color:var(--ink);letter-spacing:.005em}
+.ital{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:400}
+a{color:inherit}
+img{display:block;max-width:100%}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+
+/* labels: tracked caps, copper */
+.lbl{
+  font-size:11px;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--copper);font-weight:600;
+}
+.lbl.mute{color:var(--muted)}
+.eyebrow{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.eyebrow::before{content:'';width:44px;height:1px;background:var(--copper)}
+
+/* photo slots */
+.ph{position:relative;overflow:hidden;background:var(--paper-2)}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph.missing img{display:none}
+.ph .cap{
+  position:absolute;inset:0;display:none;
+  align-items:center;justify-content:center;text-align:center;padding:20px;
+  background:
+    linear-gradient(135deg,#EEE7DE 0%,#E6DCD0 100%);
+}
+.ph.missing .cap{display:flex}
+.ph .cap span{
+  font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:var(--copper-2);
+  line-height:1.4;
+}
+.arch{border-radius:999px 999px 0 0}
+.credit{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+
+/* buttons */
+.btn{
+  display:inline-block;padding:15px 34px;
+  background:var(--ink);color:#fff;text-decoration:none;
+  font-size:12px;letter-spacing:.24em;text-transform:uppercase;font-weight:600;
+  transition:background .2s ease;
+}
+.btn:hover{background:#2E2420}
+.btn.copper{background:var(--copper)}
+.btn.copper:hover{background:var(--copper-2)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:#fff}
+
+/* hero */
+.top{
+  text-align:center;padding:22px 0 0;
+}
+.top .lbl{color:var(--muted)}
+.top::after{content:'';display:block;width:min(720px,80%);height:1px;background:var(--line);margin:18px auto 0}
+.hero{text-align:center;padding:52px 0 40px}
+.hero .ital{color:var(--copper);font-size:20px;margin-bottom:8px}
+.hero h1{font-size:clamp(56px,11vw,116px);line-height:1;margin-bottom:14px}
+.hero .lbl{color:var(--ink);letter-spacing:.34em;margin-bottom:44px;display:block}
+.hero .ph{width:min(640px,100%);aspect-ratio:5/6;margin:0 auto 34px}
+.hero .route{display:block;color:var(--ink);letter-spacing:.28em;margin-bottom:38px}
+
+/* stats */
+.stats{
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(4,1fr);
+  padding:36px 0;margin:40px 0 0;text-align:center;
+}
+.stat .v{font-family:'Playfair Display',serif;font-size:34px;color:var(--copper);line-height:1;margin-bottom:12px}
+.stat .k{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted)}
+
+/* sections */
+section{padding:84px 0}
+.sec-h2{font-size:clamp(34px,5.4vw,52px);line-height:1.1;margin-bottom:22px}
+.lead-i{font-family:'Playfair Display',serif;font-style:italic;font-size:19px;line-height:1.55;color:var(--copper-2);margin-bottom:26px;max-width:560px}
+p+p{margin-top:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.two .ph{aspect-ratio:3/4}
+.rule{height:1px;background:var(--line);margin:34px 0}
+
+/* days */
+.days{margin-top:8px}
+.day{border-bottom:1px solid var(--line)}
+.day-row{
+  display:grid;grid-template-columns:96px 1fr 22px;gap:24px;align-items:start;
+  padding:30px 0;cursor:pointer;background:none;border:0;width:100%;text-align:left;
+  font-family:inherit;color:inherit;
+}
+.day-num{font-family:'Playfair Display',serif;font-size:30px;color:var(--copper);line-height:1;padding-top:2px}
+.day-city{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);font-weight:600;margin-bottom:8px}
+.day-sum{color:var(--body);font-size:15.5px;line-height:1.6}
+.plus{position:relative;width:14px;height:14px;margin-top:6px;justify-self:end}
+.plus::before,.plus::after{content:'';position:absolute;background:var(--copper);left:50%;top:50%;transform:translate(-50%,-50%)}
+.plus::before{width:14px;height:1px}
+.plus::after{width:1px;height:14px;transition:opacity .25s}
+.day[data-open="1"] .plus::after{opacity:0}
+.panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.4,0,.2,1)}
+.day[data-open="1"] .panel{grid-template-rows:1fr}
+.panel-in{overflow:hidden}
+.day-body{
+  display:grid;grid-template-columns:1fr 1fr;gap:40px;
+  padding:6px 0 40px 120px;
+}
+.day-body .ph{aspect-ratio:4/3}
+.day-body h3{font-size:30px;margin-bottom:14px;line-height:1.15}
+.day-body .txt{font-size:15.5px;margin-bottom:22px}
+.prog{list-style:none;border-top:1px solid var(--line)}
+.prog li{
+  padding:12px 0 12px 32px;border-bottom:1px solid var(--line);
+  font-size:15px;position:relative;color:var(--ink);
+}
+.prog li::before{content:'';position:absolute;left:0;top:22px;width:16px;height:1px;background:var(--copper)}
+.transfer{
+  background:var(--paper-2);padding:14px 22px;margin:18px 0 0;
+  font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);
+}
+.note-i{font-family:'Playfair Display',serif;font-style:italic;color:var(--muted);font-size:15px;margin-top:18px}
+
+/* hotels */
+.hotels{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:34px}
+.hotel .ph{aspect-ratio:4/3;margin-bottom:18px}
+.hotel h3{font-size:24px;margin-bottom:6px}
+.hotel .lbl{margin-bottom:10px;display:block}
+.hotel p{font-size:15px;color:var(--body)}
+.hotel .tag{display:inline-block;margin-top:12px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);border:1px solid var(--copper);padding:5px 10px}
+.box{background:var(--paper-2);padding:34px 40px;text-align:center;margin-top:38px}
+.box .ital{color:var(--muted);font-size:17px;line-height:1.6;max-width:720px;margin:0 auto}
+
+/* flight */
+.flight{
+  border:1px solid var(--line);display:grid;grid-template-columns:1.2fr 1fr 1fr 1.2fr;
+  margin-top:34px;
+}
+.flight > div{padding:26px 24px;border-right:1px solid var(--line)}
+.flight > div:last-child{border-right:0}
+.flight .k{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.flight .v{font-family:'Playfair Display',serif;font-size:24px;color:var(--ink);line-height:1.15}
+.flight .s{font-size:13px;color:var(--muted);margin-top:6px}
+
+/* includes */
+.inc{list-style:none;margin-top:30px}
+.inc li{
+  display:grid;grid-template-columns:22px 1fr;gap:16px;align-items:center;
+  padding:16px 0;border-bottom:1px solid var(--line);font-size:16px;color:var(--ink);
+}
+.inc li::before{content:'';width:12px;height:12px;border-radius:50%;background:var(--copper);opacity:.85}
+.inc.minus li::before{border-radius:0;height:1px;background:var(--muted);opacity:.7}
+.inc.minus li{color:var(--body)}
+.quote{background:var(--paper-2);padding:52px 40px;text-align:center;margin-top:44px}
+.quote .ital{font-size:clamp(19px,3vw,24px);line-height:1.6;color:var(--ink);max-width:640px;margin:0 auto}
+
+/* price */
+.price{text-align:center;padding-top:70px}
+.price .ph{width:min(560px,100%);aspect-ratio:1/1;margin:0 auto 46px;border-radius:0 0 999px 999px}
+.price .lbl{display:block;margin-bottom:16px}
+.price .big{font-family:'Playfair Display',serif;font-size:clamp(52px,9vw,88px);color:var(--ink);line-height:1;margin-bottom:16px}
+.price .sub{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);margin-bottom:30px}
+.price .split{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;margin-bottom:28px}
+.price .split div{font-size:14px;color:var(--muted)}
+.price .split b{display:block;font-family:'Playfair Display',serif;font-weight:400;font-size:24px;color:var(--ink);margin-bottom:2px}
+.price .fine{font-size:14px;color:var(--muted);max-width:520px;margin:0 auto 34px}
+
+/* why */
+.why .lead-i{max-width:none}
+.why p{max-width:680px}
+
+/* contacts */
+.contacts{text-align:center}
+.contacts .ital{font-size:26px;color:var(--copper);margin-bottom:34px;display:block}
+.rows{max-width:560px;margin:0 auto 30px;text-align:left}
+.row{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding:18px 0;border-bottom:1px solid var(--line);text-decoration:none;
+  transition:color .2s;
+}
+.row:hover{color:var(--copper-2)}
+.row .k{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted)}
+.row .v{font-size:16px;color:var(--ink);font-weight:500}
+.row:hover .v{color:var(--copper-2)}
+.msgs{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:26px 0 44px}
+.msg{
+  display:inline-flex;align-items:center;gap:10px;padding:13px 22px;
+  border:1px solid var(--line);text-decoration:none;font-size:14px;font-weight:500;color:var(--ink);
+  transition:border-color .2s,background .2s;
+}
+.msg:hover{border-color:var(--copper);background:#fff}
+.msg svg{width:17px;height:17px;fill:var(--copper)}
+.sign .ital{font-size:18px;color:var(--muted);line-height:1.5;margin-bottom:10px;display:block}
+.sign .name{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);font-weight:600}
+
+footer{
+  border-top:1px solid var(--line);padding:24px 0 40px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+}
+.logo{font-family:'Playfair Display',serif;font-size:19px;letter-spacing:.16em;color:var(--copper);line-height:1}
+.logo small{display:block;font-family:'Manrope',sans-serif;font-size:8px;letter-spacing:.3em;color:var(--muted);margin-top:5px}
+footer .lbl{font-size:10px;color:var(--muted)}
+
+/* sticky */
+.sticky{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;
+  background:rgba(247,245,241,.94);backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);padding:12px 28px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  transform:translateY(110%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+}
+.sticky.on{transform:translateY(0)}
+.sticky .t{font-size:13px;color:var(--muted)}
+.sticky .t b{display:block;font-family:'Playfair Display',serif;font-weight:400;font-size:18px;color:var(--ink)}
+.sticky .btn{padding:13px 24px;font-size:11px}
+
+@media (max-width:860px){
+  .two{grid-template-columns:1fr;gap:30px}
+  .two .ph{aspect-ratio:4/3}
+  .day-body{grid-template-columns:1fr;padding-left:0;gap:24px}
+  .day-row{grid-template-columns:64px 1fr 16px;gap:16px}
+  .day-num{font-size:24px}
+  .hotels{grid-template-columns:1fr}
+  .flight{grid-template-columns:1fr 1fr}
+  .flight > div:nth-child(2){border-right:0}
+  .flight > div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .stats{grid-template-columns:1fr 1fr;gap:28px 0}
+}
+@media (max-width:620px){
+  body{font-size:16px}
+  section{padding:60px 0}
+  .wrap{padding:0 20px}
+  .hero{padding:40px 0 28px}
+  .hero .lbl{letter-spacing:.24em;font-size:10px}
+  .hero .route{letter-spacing:.18em;font-size:10px;line-height:2}
+  .day-row{grid-template-columns:52px 1fr 14px}
+  .box,.quote{padding:30px 22px}
+  .sticky .t{display:none}
+  .sticky .btn{width:100%;text-align:center}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms !important}
+  html{scroll-behavior:auto}
+}
+:focus-visible{outline:2px solid var(--copper);outline-offset:3px}
+</style>
+</head>
+<body>
+
+<div class="top"><span class="lbl">Сценарист ваших путешествий</span></div>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="ital">авторское путешествие</div>
+    <h1>Марокко</h1>
+    <span class="lbl">Семь дней по имперским городам</span>
+
+    <figure class="ph arch">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Sunshine_on_mosque_Hassan_II_in_Casablanca%2C_Morocco_-_Flickr_-_Milamber%27s_portfolio.jpg/1280px-Sunshine_on_mosque_Hassan_II_in_Casablanca%2C_Morocco_-_Flickr_-_Milamber%27s_portfolio.jpg" alt="Мечеть Хасана II над океаном, Касабланка" onerror="this.parentElement.classList.add('missing')">
+      <div class="cap"><span>Мечеть Хасана II<br>над океаном</span></div>
+    </figure>
+
+    <span class="lbl route">Касабланка · Рабат · Фес · Марракеш · Эссувейра</span>
+    <a class="btn" href="#contacts">Узнать свободные даты</a>
+
+    <div class="stats">
+      <div class="stat"><div class="v">7</div><div class="k">дней</div></div>
+      <div class="stat"><div class="v">4</div><div class="k">имперских города</div></div>
+      <div class="stat"><div class="v">1 195 км</div><div class="k">маршрута</div></div>
+      <div class="stat"><div class="v">177 700 ₽</div><div class="k">от, с перелётом</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ ABOUT ============ -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow"><span class="lbl">О путешествии</span></div>
+    <div class="two">
+      <div>
+        <h2 class="sec-h2">Страна, которую<br>не смотрят. Её проживают.</h2>
+        <p class="lead-i">Четыре города, каждый из которых когда-то был столицей королевства. Океан, Атлас, медина, в которой не работает навигатор.</p>
+        <p>За один день вы проходите через римские развалины, королевский дворец и средневековые улочки, где ничего не изменилось за восемьсот лет. Вечером — мятный чай на крыше. Утром — дорога через кедровый лес.</p>
+        <p>Перелёт, отели, транспорт с кондиционером, русскоговорящий гид и входные билеты собраны в единый сценарий заранее. Вам остаётся только приехать.</p>
+      </div>
+      <figure class="ph">
+        <img src="img/about-fes.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+        <div class="cap"><span>Улочка медины Феса</span></div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DAYS ============ -->
+<section style="padding-top:20px">
+  <div class="wrap">
+    <div class="eyebrow"><span class="lbl">Маршрут</span></div>
+    <h2 class="sec-h2">Семь дней по дням</h2>
+    <p class="lead-i" style="margin-bottom:10px">Нажмите на день — откроется программа и фотографии.</p>
+
+    <div class="days" id="days">
+
+      <!-- DAY 1 -->
+      <div class="day" data-open="1">
+        <button class="day-row" aria-expanded="true">
+          <span class="day-num">01</span>
+          <span><span class="day-city">Касабланка</span>
+            <span class="day-sum">Прилёт, встреча с гидом, квартал Хабус, набережная Ла Корниш и мечеть Хасана II над океаном.</span></span>
+          <span class="plus"></span>
+        </button>
+        <div class="panel"><div class="panel-in"><div class="day-body">
+          <div>
+            <h3>Первое касание</h3>
+            <p class="txt">Прилёт — и сразу в город, без гостиничного простоя. Мечеть Хасана II стоит прямо над водой, с самым высоким минаретом в мире. Внутрь можно зайти отдельно, и это стоит сделать.</p>
+            <ul class="prog">
+              <li>Квартал Хабус — колониальный стиль и восток в одном месте</li>
+              <li>Мечеть Хасана II, внешний осмотр</li>
+              <li>Набережная Ла Корниш</li>
+              <li>Ужин и первая ночь в Касабланке</li>
+            </ul>
+            <div class="transfer">Внутренний осмотр мечети · по желанию · от 14 €</div>
+          </div>
+          <figure class="ph">
+            <img src="img/d1-casablanca.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+            <div class="cap"><span>Мечеть Хасана II,<br>вид с набережной</span></div>
+          </figure>
+        </div></div></div>
+      </div>
+
+      <!-- DAY 2 -->
+      <div class="day">
+        <button class="day-row" aria-expanded="false">
+          <span class="day-num">02</span>
+          <span><span class="day-city">Рабат · Волюбилис · Фес</span>
+            <span class="day-sum">Королевская столица утром, римский город днём, ночёвка в Фесе. 295 км.</span></span>
+          <span class="plus"></span>
+        </button>
+        <div class="panel"><div class="panel-in"><div class="day-body">
+          <div>
+            <h3>Два тысячелетия за день</h3>
+            <p class="txt">Касба Удайя, где все дома белые с синим, а с террасы видно, как река уходит в океан. И Волюбилис — римский город на высоте 400 метров, брошенный полторы тысячи лет назад. Мозаики лежат прямо под ногами.</p>
+            <ul class="prog">
+              <li>Королевский дворец и мавзолей Мухаммеда V</li>
+              <li>Башня Хасана, ровесница севильской Джиральды</li>
+              <li>Касба Удайя</li>
+              <li>Волюбилис: триумфальная арка, термы, дом Орфея</li>
+            </ul>
+            <div class="transfer">Переезд Касабланка → Рабат → Волюбилис → Фес · 295 км</div>
+          </div>
+          <figure class="ph">
+            <img src="img/d2-volubilis.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+            <div class="cap"><span>Руины Волюбилиса</span></div>
+          </figure>
+        </div></div></div>
+      </div>
+
+      <!-- DAY 3 -->
+      <div class="day">
+        <button class="day-row" aria-expanded="false">
+          <span class="day-num">03</span>
+          <span><span class="day-city">Фес</span>
+            <span class="day-sum">Целый день в самой большой средневековой медине мира: медресе, мечеть Бу Инания, кожевенные кварталы.</span></span>
+          <span class="plus"></span>
+        </button>
+        <div class="panel"><div class="panel-in"><div class="day-body">
+          <div>
+            <h3>День, ради которого едут</h3>
+            <p class="txt">Девять тысяч улочек, в которых не работает навигатор. Ремесленники работают по той же технологии, что их прадеды, и увидеть это можно только здесь. Целый день с гидом — иначе тут просто нельзя.</p>
+            <ul class="prog">
+              <li>Древняя медина Фес-эль-Бали</li>
+              <li>Мечеть Бу Инания и медресе — университеты XIV века</li>
+              <li>Кварталы кожевенников и гончаров</li>
+              <li>Памятники Меринидов и Алауитов</li>
+            </ul>
+            <div class="transfer">Без переездов · весь день в городе</div>
+          </div>
+          <figure class="ph">
+            <img src="img/d3-fes.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+            <div class="cap"><span>Красильни Феса</span></div>
+          </figure>
+        </div></div></div>
+      </div>
+
+      <!-- DAY 4 -->
+      <div class="day">
+        <button class="day-row" aria-expanded="false">
+          <span class="day-num">04</span>
+          <span><span class="day-city">Фес — Марракеш</span>
+            <span class="day-sum">Самый красивый переезд маршрута: Средний Атлас, кедровые леса и «швейцарский» Ифран. 480 км.</span></span>
+          <span class="plus"></span>
+        </button>
+        <div class="panel"><div class="panel-in"><div class="day-body">
+          <div>
+            <h3>Дорога через Атлас</h3>
+            <p class="txt">Берберские деревни, кедровые леса, и Ифран — город, который построили французы и который выглядит как альпийский курорт с черепичными крышами. Останавливаемся, дышим, снимаем.</p>
+            <ul class="prog">
+              <li>Берберские деревни Среднего Атласа</li>
+              <li>Кедровые леса</li>
+              <li>Ифран — «марокканская Швейцария»</li>
+              <li>К вечеру — Марракеш, ужин в отеле</li>
+            </ul>
+            <div class="transfer">Переезд Фес → Марракеш · 480 км · с остановками</div>
+          </div>
+          <figure class="ph">
+            <img src="img/d4-atlas.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+            <div class="cap"><span>Кедровый лес,<br>Средний Атлас</span></div>
+          </figure>
+        </div></div></div>
+      </div>
+
+      <!-- DAY 5 -->
+      <div class="day">
+        <button class="day-row" aria-expanded="false">
+          <span class="day-num">05</span>
+          <span><span class="day-city">Марракеш</span>
+            <span class="day-sum">Кутубия, Дар эль-Баша, сады Мажорель — и вечером площадь Джемаа-эль-Фна.</span></span>
+          <span class="plus"></span>
+        </button>
+        <div class="panel"><div class="panel-in"><div class="day-body">
+          <div>
+            <h3>Жемчужина Юга</h3>
+            <p class="txt">Сады Мажорель — те самые, с кобальтовыми стенами, которые спас Ив Сен-Лоран. А на закате площадь Джемаа-эль-Фна превращается в театр под открытым небом: заклинатели змей, знахари, торговцы специями.</p>
+            <ul class="prog">
+              <li>Мечеть Кутубия</li>
+              <li>Дворец Дар эль-Баша</li>
+              <li>Сады Мажорель</li>
+              <li>Рынок и площадь Джемаа-эль-Фна на закате</li>
+            </ul>
+            <div class="transfer">Без переездов · весь день в городе</div>
+          </div>
+          <figure class="ph">
+            <img src="img/d5-marrakech.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+            <div class="cap"><span>Джемаа-эль-Фна<br>на закате</span></div>
+          </figure>
+        </div></div></div>
+      </div>
+
+      <!-- DAY 6 -->
+      <div class="day">
+        <button class="day-row" aria-expanded="false">
+          <span class="day-num">06</span>
+          <span><span class="day-city">Эссувейра</span>
+            <span class="day-sum">Атлантика. Крепость с испанскими пушками, порт, обед из свежего улова. 200 км в одну сторону.</span></span>
+          <span class="plus"></span>
+        </button>
+        <div class="panel"><div class="panel-in"><div class="day-body">
+          <div>
+            <h3>Океан</h3>
+            <p class="txt">Двести километров — и всё меняется: ветер, чайки, белые стены, синие лодки. Обед в рыбном ресторане: выбираете улов, его жарят при вас. Свободное время на старый город и шопинг.</p>
+            <ul class="prog">
+              <li>Бастион с испанскими пушками XVIII века</li>
+              <li>Старый город и порт</li>
+              <li>Обед из свежего улова</li>
+              <li>Свободное время · возвращение в Марракеш</li>
+            </ul>
+            <div class="transfer">Марракеш → Эссувейра → Марракеш · 200 км в одну сторону</div>
+          </div>
+          <figure class="ph">
+            <img src="img/d6-essaouira.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+            <div class="cap"><span>Порт Эссувейры</span></div>
+          </figure>
+        </div></div></div>
+      </div>
+
+      <!-- DAY 7 -->
+      <div class="day">
+        <button class="day-row" aria-expanded="false">
+          <span class="day-num">07</span>
+          <span><span class="day-city">Марракеш — Касабланка</span>
+            <span class="day-sum">Свободное утро и трансфер в аэропорт. 220 км по автостраде.</span></span>
+          <span class="plus"></span>
+        </button>
+        <div class="panel"><div class="panel-in"><div class="day-body">
+          <div>
+            <h3>Последнее утро</h3>
+            <p class="txt">На последний базар, последний мятный чай и последние двести фотографий. Потом — дорога в аэропорт Касабланки.</p>
+            <ul class="prog">
+              <li>Свободное время в Марракеше</li>
+              <li>Трансфер в аэропорт Мохаммед V</li>
+            </ul>
+            <p class="note-i">После этого — завершение путешествия и вылет домой.</p>
+          </div>
+          <figure class="ph">
+            <img src="img/d7-departure.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+            <div class="cap"><span>Утро в Марракеше</span></div>
+          </figure>
+        </div></div></div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center;margin-top:44px">
+      <a class="btn ghost" href="#contacts">Запросить программу на мои даты</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOTELS ============ -->
+<section style="padding-top:20px">
+  <div class="wrap">
+    <div class="eyebrow"><span class="lbl">Размещение · 6 ночей</span></div>
+    <h2 class="sec-h2">Где остановимся</h2>
+    <p class="lead-i">Отели 3* и 4* на базе полупансиона, подбираются под каждую группу индивидуально.</p>
+
+    <div class="hotels">
+      <div class="hotel">
+        <figure class="ph"><img src="img/h-casablanca.jpg" alt="" onerror="this.parentElement.classList.add('missing')"><div class="cap"><span>Касабланка</span></div></figure>
+        <span class="lbl">1 ночь</span>
+        <h3>Касабланка</h3>
+        <p>Первая ночь после перелёта — рядом с центром, чтобы утром не терять времени.</p>
+        <span class="tag">Подбирается под вас</span>
+      </div>
+      <div class="hotel">
+        <figure class="ph"><img src="img/h-fes.jpg" alt="" onerror="this.parentElement.classList.add('missing')"><div class="cap"><span>Фес</span></div></figure>
+        <span class="lbl">2 ночи</span>
+        <h3>Фес</h3>
+        <p>Две ночи у старейшей медины мира. По желанию — риад в старом городе вместо сетевого отеля.</p>
+        <span class="tag">Подбирается под вас</span>
+      </div>
+      <div class="hotel">
+        <figure class="ph"><img src="img/h-marrakech.jpg" alt="" onerror="this.parentElement.classList.add('missing')"><div class="cap"><span>Марракеш</span></div></figure>
+        <span class="lbl">3 ночи</span>
+        <h3>Марракеш</h3>
+        <p>База на три ночи: отсюда выезжаем к океану и возвращаемся к ужину.</p>
+        <span class="tag">Подбирается под вас</span>
+      </div>
+    </div>
+
+    <div class="box">
+      <p class="ital">Мы смотрим на ваши даты, состав и пожелания, а не выдаём всем один и тот же вариант из каталога. Хотите риад вместо отеля — скажите заранее, это решаемо.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FLIGHT ============ -->
+<section style="padding-top:20px">
+  <div class="wrap">
+    <div class="eyebrow"><span class="lbl">Перелёт</span></div>
+    <h2 class="sec-h2">Прямой рейс,<br>шесть часов над Европой</h2>
+
+    <div class="flight">
+      <div>
+        <div class="k">Авиакомпания</div>
+        <div class="v">Royal Air Maroc</div>
+        <div class="s">прямой, без пересадок</div>
+      </div>
+      <div>
+        <div class="k">Туда</div>
+        <div class="v">Москва → Касабланка</div>
+        <div class="s">Шереметьево → Мохаммед V</div>
+      </div>
+      <div>
+        <div class="k">В полёте</div>
+        <div class="v">6 ч 15 мин</div>
+        <div class="s">в каждую сторону</div>
+      </div>
+      <div>
+        <div class="k">Ориентировочно</div>
+        <div class="v">73 995 ₽</div>
+        <div class="s">на человека, туда и обратно</div>
+      </div>
+    </div>
+    <p class="note-i">Программа рассчитана под рейсы Royal Air Maroc из Москвы и Санкт-Петербурга. Даты и цену билета фиксируем под ваш заезд.</p>
+  </div>
+</section>
+
+<!-- ============ INCLUDES ============ -->
+<section style="padding-top:20px">
+  <div class="wrap">
+    <div class="eyebrow"><span class="lbl">Под ключ</span></div>
+    <h2 class="sec-h2">Что уже сделано за вас</h2>
+    <p class="lead-i">Вы не сравниваете вкладки с отелями и не ищете, где купить билет в медресе. Всё это уже включено.</p>
+
+    <div class="two">
+      <div>
+        <span class="lbl">Входит в стоимость</span>
+        <ul class="inc">
+          <li>Отели 3*/4* на базе полупансиона</li>
+          <li>Транспорт с кондиционером на всём маршруте</li>
+          <li>Русскоговорящий гид</li>
+          <li>Билеты: медресе в Фесе, Волюбилис, дворец Бахия, сады Мажорель</li>
+          <li>Медицинская страховка</li>
+        </ul>
+      </div>
+      <div>
+        <span class="lbl mute">Оплачивается отдельно</span>
+        <ul class="inc minus">
+          <li>Международный авиабилет</li>
+          <li>Таксовый сбор 25 € с человека, на месте</li>
+          <li>Напитки за ужином</li>
+          <li>Личные расходы</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY ============ -->
+<section class="why" style="padding-top:20px">
+  <div class="wrap">
+    <div class="eyebrow"><span class="lbl">Зачем вам я</span></div>
+    <h2 class="sec-h2">Этот тур можно найти самому</h2>
+    <p class="lead-i">Только потом выяснится, что рейс приходит в четыре утра и первый день съеден. Что в ноябре в Фесе вечером +10. Что в медине без гида вы потеряете два часа и нервы.</p>
+    <p>Я это знаю. И беру на себя всё: перелёт под ваш заезд, отель, трансферы, страховку, дополнительные экскурсии, столик в ресторане, сюрприз в номер к годовщине. Подбор бесплатный — вы платите ровно за тур.</p>
+    <p>А вы просто собираете чемодан.</p>
+
+    <div class="quote">
+      <p class="ital">«Моя главная задача — ваш комфорт, ваши эмоции и оптимизация затрат на ваши путешествия»</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICE ============ -->
+<section class="price">
+  <div class="wrap">
+    <figure class="ph">
+      <img src="img/price-marrakech.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+      <div class="cap"><span>Закат над Марракешем</span></div>
+    </figure>
+    <span class="lbl">Ориентировочная стоимость</span>
+    <div class="big">от 177 700 ₽</div>
+    <div class="sub">на человека · с перелётом</div>
+    <div class="split">
+      <div><b>103 733 ₽</b>тур, ½ двухместного</div>
+      <div><b>73 995 ₽</b>перелёт туда-обратно</div>
+    </div>
+    <p class="fine">Стоимость ориентировочная и зависит от дат заезда и курса. Одноместное размещение — по запросу.</p>
+    <a class="btn copper" href="#contacts">Посчитать на мои даты</a>
+  </div>
+</section>
+
+<!-- ============ CONTACTS ============ -->
+<section class="contacts" id="contacts">
+  <div class="wrap">
+    <span class="ital">Забронировать даты</span>
+
+    <div class="rows">
+      <a class="row" href="tel:+79219086624"><span class="k">Телефон</span><span class="v">+7 921 908 66 24</span></a>
+      <a class="row" href="https://t.me/lanatravelclub"><span class="k">Telegram</span><span class="v">@lanatravelclub</span></a>
+      <a class="row" href="https://www.instagram.com/lanatravelclub"><span class="k">Instagram</span><span class="v">@lanatravelclub</span></a>
+      <a class="row" href="https://vk.com/lanatravelclub"><span class="k">VK</span><span class="v">vk.com/lanatravelclub</span></a>
+      <a class="row" href="mailto:lanatravel@request.ru?subject=Марокко%2C%20имперские%20города"><span class="k">Почта</span><span class="v">lanatravel@request.ru</span></a>
+    </div>
+
+    <div class="msgs">
+      <a class="msg" href="https://t.me/lanatravelclub"><svg viewBox="0 0 24 24"><path d="M21.9 4.3 18.6 20c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1 9.3-8.4c.4-.4-.1-.6-.6-.2L6 12.4l-5-1.6c-1.1-.3-1.1-1 .2-1.5l19.4-7.5c.9-.3 1.7.2 1.3 2.5z"/></svg>Написать в Telegram</a>
+      <a class="msg" href="https://wa.me/79219086624"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5-4.5-.2-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.5-.3.3c-.1.1-.2.3 0 .5.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.2.1.4.1.5-.1l.7-.9c.2-.2.3-.2.5-.1l2 .9c.2.1.4.2.4.3.1.2.1.6-.1 1.1z"/></svg>Написать в WhatsApp</a>
+    </div>
+
+    <div class="sign">
+      <span class="ital">С любовью к путешествиям,<br>ваш личный тревел-советник</span>
+      <div class="name">Лана Александрова</div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <footer>
+    <div class="logo">LANATRAVEL<small>Сценарист ваших путешествий</small></div>
+    <span class="lbl">Марокко · 7 дней</span>
+  </footer>
+</div>
+
+<!-- ============ STICKY ============ -->
+<div class="sticky" id="sticky">
+  <div class="t"><b>Марокко · 7 дней</b>от 177 700 ₽ с перелётом</div>
+  <a class="btn copper" href="#contacts">Узнать даты и цену</a>
+</div>
+
+<script>
+document.querySelectorAll('.day-row').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var d=btn.parentElement, open=d.getAttribute('data-open')==='1';
+    document.querySelectorAll('.day').forEach(function(x){
+      x.setAttribute('data-open','0');
+      x.querySelector('.day-row').setAttribute('aria-expanded','false');
+    });
+    if(!open){d.setAttribute('data-open','1');btn.setAttribute('aria-expanded','true');}
+  });
+});
+var hero=document.querySelector('.hero'),st=document.getElementById('sticky'),ct=document.getElementById('contacts');
+if('IntersectionObserver' in window){
+  var heroSeen=true, contactsSeen=false;
+  function upd(){st.classList.toggle('on',!heroSeen && !contactsSeen);}
+  new IntersectionObserver(function(e){heroSeen=e[0].isIntersecting;upd();},{threshold:0}).observe(hero);
+  new IntersectionObserver(function(e){contactsSeen=e[0].isIntersecting;upd();},{threshold:.2}).observe(ct);
+}
+</script>
+</body>
+</html>
