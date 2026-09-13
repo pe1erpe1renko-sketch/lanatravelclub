@@ -110,6 +110,7 @@ p+p{margin-top:16px}
 .day{border-bottom:1px solid var(--line)}
 .day-row{
   display:grid;grid-template-columns:96px 1fr 22px;gap:24px;align-items:start;
+  scroll-margin-top:16px;
   padding:30px 0;cursor:pointer;background:none;border:0;width:100%;text-align:left;
   font-family:inherit;color:inherit;
 }
@@ -194,24 +195,26 @@ p+p{margin-top:16px}
 /* contacts */
 .contacts{text-align:center}
 .contacts .ital{font-size:26px;color:var(--copper);margin-bottom:34px;display:block}
-.rows{max-width:560px;margin:0 auto 30px;text-align:left}
-.row{
-  display:flex;justify-content:space-between;align-items:center;gap:16px;
-  padding:18px 0;border-bottom:1px solid var(--line);text-decoration:none;
-  transition:color .2s;
+.cgrid{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  max-width:720px;margin:0 auto 40px;text-align:left;
 }
-.row:hover{color:var(--copper-2)}
-.row .k{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted)}
-.row .v{font-size:16px;color:var(--ink);font-weight:500}
-.row:hover .v{color:var(--copper-2)}
-.msgs{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:26px 0 44px}
-.msg{
-  display:inline-flex;align-items:center;gap:10px;padding:13px 22px;
-  border:1px solid var(--line);text-decoration:none;font-size:14px;font-weight:500;color:var(--ink);
+.cbtn{
+  display:grid;grid-template-columns:22px 1fr 12px;align-items:center;gap:16px;
+  padding:18px 20px;border:1px solid var(--line);text-decoration:none;color:inherit;
   transition:border-color .2s,background .2s;
 }
-.msg:hover{border-color:var(--copper);background:#fff}
-.msg svg{width:17px;height:17px;fill:var(--copper)}
+.cbtn:hover{border-color:var(--copper);background:#fff}
+.cbtn .ico{width:22px;height:22px;display:block}
+.ico-f{fill:var(--copper)}
+.ico-s{fill:none;stroke:var(--copper);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.cbtn .t{display:block;font-size:15px;font-weight:600;color:var(--ink);line-height:1.3}
+.cbtn .s{display:block;font-size:12.5px;color:var(--muted);line-height:1.4;margin-top:3px;word-break:break-word}
+.cbtn .arr{
+  width:12px;height:12px;fill:none;stroke:var(--muted);stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s;
+}
+.cbtn:hover .arr{stroke:var(--copper)}
 .sign .ital{font-size:18px;color:var(--muted);line-height:1.5;margin-bottom:10px;display:block}
 .sign .name{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);font-weight:600}
 
@@ -246,7 +249,26 @@ footer .lbl{font-size:10px;color:var(--muted)}
   .flight{grid-template-columns:1fr 1fr}
   .flight > div:nth-child(2){border-right:0}
   .flight > div:nth-child(-n+2){border-bottom:1px solid var(--line)}
-  .stats{grid-template-columns:1fr 1fr;gap:28px 0}
+}
+/* stats: 2x2 with dividers between 621 and 860 */
+@media (max-width:860px) and (min-width:621px){
+  .stats{grid-template-columns:1fr 1fr;gap:0;padding:0}
+  .stat{padding:26px 18px}
+  .stat:nth-child(odd){border-right:1px solid var(--line)}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+}
+/* stats: single column, value left / label right, up to 620 */
+@media (max-width:620px){
+  .stats{
+    grid-template-columns:1fr;gap:0;padding:0;margin-top:34px;text-align:left;
+  }
+  .stat{
+    display:flex;align-items:baseline;justify-content:space-between;gap:18px;
+    padding:15px 0;border-bottom:1px solid var(--line);
+  }
+  .stat:last-child{border-bottom:0}
+  .stat .v{font-size:26px;margin-bottom:0}
+  .stat .k{text-align:right;flex-shrink:0}
 }
 @media (max-width:620px){
   body{font-size:16px}
@@ -259,6 +281,9 @@ footer .lbl{font-size:10px;color:var(--muted)}
   .box,.quote{padding:30px 22px}
   .sticky .t{display:none}
   .sticky .btn{width:100%;text-align:center}
+}
+@media (max-width:480px){
+  .cgrid{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){
   *{transition-duration:.01ms !important}
@@ -279,7 +304,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
     <span class="lbl">Семь дней по имперским городам</span>
 
     <figure class="ph arch">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Sunshine_on_mosque_Hassan_II_in_Casablanca%2C_Morocco_-_Flickr_-_Milamber%27s_portfolio.jpg/1280px-Sunshine_on_mosque_Hassan_II_in_Casablanca%2C_Morocco_-_Flickr_-_Milamber%27s_portfolio.jpg" alt="Мечеть Хасана II над океаном, Касабланка" onerror="this.parentElement.classList.add('missing')">
+      <img src="img/hero.jpg" alt="Мечеть Хасана II над океаном, Касабланка" onerror="this.parentElement.classList.add('missing')">
       <div class="cap"><span>Мечеть Хасана II<br>над океаном</span></div>
     </figure>
 
@@ -289,7 +314,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
     <div class="stats">
       <div class="stat"><div class="v">7</div><div class="k">дней</div></div>
       <div class="stat"><div class="v">4</div><div class="k">имперских города</div></div>
-      <div class="stat"><div class="v">1 195 км</div><div class="k">маршрута</div></div>
+      <div class="stat"><div class="v">≈ 1 400 км</div><div class="k">маршрута</div></div>
       <div class="stat"><div class="v">177 700 ₽</div><div class="k">от, с перелётом</div></div>
     </div>
   </div>
@@ -657,17 +682,37 @@ footer .lbl{font-size:10px;color:var(--muted)}
   <div class="wrap">
     <span class="ital">Забронировать даты</span>
 
-    <div class="rows">
-      <a class="row" href="tel:+79219086624"><span class="k">Телефон</span><span class="v">+7 921 908 66 24</span></a>
-      <a class="row" href="https://t.me/lanatravelclub"><span class="k">Telegram</span><span class="v">@lanatravelclub</span></a>
-      <a class="row" href="https://www.instagram.com/lanatravelclub"><span class="k">Instagram</span><span class="v">@lanatravelclub</span></a>
-      <a class="row" href="https://vk.com/lanatravelclub"><span class="k">VK</span><span class="v">vk.com/lanatravelclub</span></a>
-      <a class="row" href="mailto:lanatravel@request.ru?subject=Марокко%2C%20имперские%20города"><span class="k">Почта</span><span class="v">lanatravel@request.ru</span></a>
-    </div>
-
-    <div class="msgs">
-      <a class="msg" href="https://t.me/lanatravelclub"><svg viewBox="0 0 24 24"><path d="M21.9 4.3 18.6 20c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1 9.3-8.4c.4-.4-.1-.6-.6-.2L6 12.4l-5-1.6c-1.1-.3-1.1-1 .2-1.5l19.4-7.5c.9-.3 1.7.2 1.3 2.5z"/></svg>Написать в Telegram</a>
-      <a class="msg" href="https://wa.me/79219086624"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5-4.5-.2-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.5-.3.3c-.1.1-.2.3 0 .5.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.2.1.4.1.5-.1l.7-.9c.2-.2.3-.2.5-.1l2 .9c.2.1.4.2.4.3.1.2.1.6-.1 1.1z"/></svg>Написать в WhatsApp</a>
+    <div class="cgrid">
+      <a class="cbtn" href="https://t.me/lanatravelclub">
+        <svg class="ico ico-f" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.9 4.3 18.6 20c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1 9.3-8.4c.4-.4-.1-.6-.6-.2L6 12.4l-5-1.6c-1.1-.3-1.1-1 .2-1.5l19.4-7.5c.9-.3 1.7.2 1.3 2.5z"/></svg>
+        <span><span class="t">Telegram</span><span class="s">@lanatravelclub</span></span>
+        <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 1.5 8 6l-4.5 4.5"/></svg>
+      </a>
+      <a class="cbtn" href="https://wa.me/79219086624">
+        <svg class="ico ico-f" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5-4.5-.2-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.5-.3.3c-.1.1-.2.3 0 .5.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.2.1.4.1.5-.1l.7-.9c.2-.2.3-.2.5-.1l2 .9c.2.1.4.2.4.3.1.2.1.6-.1 1.1z"/></svg>
+        <span><span class="t">WhatsApp</span><span class="s">+7 921 908 66 24</span></span>
+        <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 1.5 8 6l-4.5 4.5"/></svg>
+      </a>
+      <a class="cbtn" href="tel:+79219086624">
+        <svg class="ico ico-s" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3h3l1.5 4-2 1.4a12 12 0 0 0 6.6 6.6L17 13l4 1.5v3a2.5 2.5 0 0 1-2.7 2.5C10.4 19.4 4.6 13.6 4 5.7A2.5 2.5 0 0 1 6.5 3z"/></svg>
+        <span><span class="t">Позвонить</span><span class="s">+7 921 908 66 24</span></span>
+        <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 1.5 8 6l-4.5 4.5"/></svg>
+      </a>
+      <a class="cbtn" href="https://www.instagram.com/lanatravelclub">
+        <svg class="ico ico-s" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="var(--copper)" stroke="none"/></svg>
+        <span><span class="t">Instagram</span><span class="s">@lanatravelclub</span></span>
+        <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 1.5 8 6l-4.5 4.5"/></svg>
+      </a>
+      <a class="cbtn" href="https://vk.com/lanatravelclub">
+        <svg class="ico ico-f" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.9 16.9c-5.4 0-8.7-3.8-8.8-10h2.8c.1 4.6 2.1 6.5 3.7 6.9V6.9h2.6v4c1.5-.2 3.2-1.9 3.7-4h2.6c-.4 2.5-2.1 4.2-3.4 4.9 1.3.6 3.2 2.1 3.9 5h-2.9c-.6-1.8-2-3.3-3.9-3.5v3.5h-.3z"/></svg>
+        <span><span class="t">VK</span><span class="s">vk.com/lanatravelclub</span></span>
+        <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 1.5 8 6l-4.5 4.5"/></svg>
+      </a>
+      <a class="cbtn" href="mailto:lanatravel@request.ru?subject=Марокко">
+        <svg class="ico ico-s" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.8" y="5" width="18.4" height="14" rx="2"/><path d="M3.4 6.5 12 12.8l8.6-6.3"/></svg>
+        <span><span class="t">Написать на почту</span><span class="s">lanatravel@request.ru</span></span>
+        <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 1.5 8 6l-4.5 4.5"/></svg>
+      </a>
     </div>
 
     <div class="sign">
@@ -694,11 +739,8 @@ footer .lbl{font-size:10px;color:var(--muted)}
 document.querySelectorAll('.day-row').forEach(function(btn){
   btn.addEventListener('click',function(){
     var d=btn.parentElement, open=d.getAttribute('data-open')==='1';
-    document.querySelectorAll('.day').forEach(function(x){
-      x.setAttribute('data-open','0');
-      x.querySelector('.day-row').setAttribute('aria-expanded','false');
-    });
-    if(!open){d.setAttribute('data-open','1');btn.setAttribute('aria-expanded','true');}
+    d.setAttribute('data-open',open?'0':'1');
+    btn.setAttribute('aria-expanded',open?'false':'true');
   });
 });
 var hero=document.querySelector('.hero'),st=document.getElementById('sticky'),ct=document.getElementById('contacts');
