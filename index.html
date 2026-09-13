@@ -393,20 +393,57 @@ footer .lbl{font-size:10px;color:var(--muted)}
   .day-row:hover .day-num{background:var(--paper-2);color:var(--copper)}
 }
 
-/* --- 3. схема маршрута --- */
-.routemap{width:100%;height:110px;display:block;margin:26px 0 6px;overflow:visible}
-.routemap .rline{fill:none;stroke:var(--copper);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.routemap .rdot{fill:var(--paper);stroke:var(--copper);stroke-width:1.5;transform-box:fill-box;transform-origin:center}
-.anim .routemap .rdot{opacity:0;transform:scale(.2);transition:opacity .5s var(--ease),transform .5s var(--ease),fill .4s ease}
+/* --- 3. липкая навигация по дням --- */
+/* .route-bar и .days лежат в одном .route-wrap, поэтому sticky сам
+   заканчивается вместе со списком дней — без единой строки JS */
+.route-wrap{position:relative}
+.route-bar{
+  position:sticky;top:0;z-index:20;
+  height:88px;background:var(--paper);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:28px;
+}
+.route-now{flex:none;min-width:210px}
+.route-now .lbl{color:var(--copper);white-space:nowrap;display:block}
+
+.routemap{flex:1;min-width:0;height:56px;display:block;overflow:visible}
+.routemap .rline,.routemap .rrest{
+  fill:none;stroke:var(--copper);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;
+}
+.routemap .rrest{stroke-dasharray:4 5;opacity:.45}
+.anim .routemap .rrest{opacity:0;transition:opacity .4s var(--ease)}
+.anim .routemap.drawn .rrest{opacity:.45}
+
+.routemap .rstation{cursor:pointer}
+.routemap .rhit{fill:transparent;pointer-events:all}
+.routemap .rdot{
+  fill:var(--paper);stroke:var(--copper);stroke-width:1.5;
+  transform-box:fill-box;transform-origin:center;pointer-events:none;
+}
+.anim .routemap .rdot{opacity:0;transform:scale(.2);transition:opacity .5s var(--ease),transform .4s var(--ease),fill .4s ease}
 .anim .routemap.in .rdot{opacity:1;transform:scale(1)}
-.routemap .rdot.active{fill:var(--copper)}
+.routemap .rdot.active{fill:var(--copper);transform:scale(1.4)}   /* r 5 -> 7 */
 .anim .routemap.in .rdot.active{transform:scale(1.4)}
 .routemap .rlabel{
   fill:var(--muted);font-family:'Manrope',sans-serif;font-size:10px;font-weight:600;
   letter-spacing:.18em;text-transform:uppercase;text-anchor:middle;
+  pointer-events:none;transition:fill .4s ease;
 }
-.anim .routemap .rlabel{opacity:0;transition:opacity .5s var(--ease)}
+.routemap .rlabel.active{fill:var(--copper)}
+.anim .routemap .rlabel{opacity:0;transition:opacity .5s var(--ease),fill .4s ease}
 .anim .routemap.in .rlabel{opacity:1}
+@media (hover:hover){
+  .routemap .rstation:hover .rlabel{fill:var(--copper)}
+  .routemap .rstation:hover .rdot{stroke:var(--copper-2)}
+}
+/* мобильный бар: строка «День 03 · Фес» над схемой, подписи городов скрыты.
+   Блок обязан идти ПОСЛЕ десктопных правил .route-bar/.routemap — при равной
+   специфичности выигрывает то, что ниже, а не то, что в медиазапросе. */
+@media (max-width:620px){
+  .route-bar{height:64px;display:block;padding-top:9px}
+  .route-now{min-width:0;margin-bottom:2px}
+  .route-now .lbl{font-size:9.5px;letter-spacing:.2em}
+  .routemap{height:34px;width:100%;flex:none}
+}
 
 /* --- 4. самолёт --- */
 .flightmap{width:100%;height:90px;display:block;margin-bottom:10px;overflow:visible}
@@ -461,6 +498,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
   .price .big{clip-path:none !important}
   .eyebrow::before{transform:none !important}
   .day-num{color:var(--copper) !important}
+  .routemap .rrest{opacity:.45 !important}
   .spine-fill{transform:scaleY(1) !important}
 }
 :focus-visible{outline:2px solid var(--copper);outline-offset:3px}
@@ -520,11 +558,15 @@ footer .lbl{font-size:10px;color:var(--muted)}
     <h2 class="sec-h2">Семь дней по дням</h2>
     <p class="lead-i" style="margin-bottom:10px">Нажмите на день — откроется программа и фотографии.</p>
 
-    <svg class="routemap" id="routemap" role="img" aria-label="Схема маршрута: Касабланка, Рабат, Фес, Марракеш, Эссувейра, Касабланка" preserveAspectRatio="xMinYMin meet">
-      <path class="rline" id="rline"></path>
-      <g id="rdots"></g>
-      <g id="rlabels"></g>
-    </svg>
+    <div class="route-wrap">
+      <div class="route-bar" id="routebar">
+        <div class="route-now"><span class="lbl" id="routenow">День 01 · Касабланка</span></div>
+        <svg class="routemap" id="routemap" role="img" aria-label="Навигация по дням: Касабланка, Рабат, Фес, Марракеш, Эссувейра, Касабланка" preserveAspectRatio="xMinYMin meet">
+          <path class="rrest" id="rrest"></path>
+          <path class="rline" id="rline"></path>
+          <g id="rdots"></g>
+        </svg>
+      </div>
 
     <div class="days" id="days">
       <div class="spine" aria-hidden="true"></div>
@@ -770,6 +812,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
       </div>
 
     </div>
+    </div><!-- /.route-wrap -->
 
     <div style="text-align:center;margin-top:44px">
       <a class="btn ghost" href="#contacts">Запросить программу на мои даты</a>
@@ -1153,103 +1196,209 @@ var spineTick = false;
 function onScroll(){
   if(spineTick) return;
   spineTick = true;
-  requestAnimationFrame(function(){ spineTick = false; updateSpine(); });
+  requestAnimationFrame(function(){ spineTick = false; updateSpine(); syncFromScroll(); });
 }
 
-/* ============ 3. СХЕМА МАРШРУТА ============ */
-var CITIES = ['Касабланка','Рабат','Фес','Марракеш','Эссувейра','Касабланка'];
-var LEVELS = [44,44,30,30,44,44];
-var DAY_DOTS = [[0],[1,2],[2],[3],[3],[4],[5]];
-var rmap = $('#routemap'), rline = $('#rline');
-var rdots = [], rlabels = [], pathLen = 0, currentDay = 0;
+/* ============ 3. ЛИПКАЯ НАВИГАЦИЯ ПО ДНЯМ ============ */
+var CITIES  = ['Касабланка','Рабат','Фес','Марракеш','Эссувейра','Касабланка'];
+var DAY_DOT = [0,1,2,3,3,4,5];                                    /* день -> точка */
+var DOT_DAY = CITIES.map(function(_,d){ return DAY_DOT.indexOf(d); }); /* точка -> первый её день */
+
+var rbar = $('#routebar'), rnow = $('#routenow');
+var rmap = $('#routemap'), rline = $('#rline'), rrest = $('#rrest');
+var rdots = [], rlabels = [], segAt = [], pathLen = 0;
+var curDay = 0, lockDay = -1, introDone = false;
+
+function barBottom(){ return rbar ? rbar.getBoundingClientRect().bottom : 0; }
+function barHeight(){ return rbar ? rbar.offsetHeight : 0; }
 
 function buildRoute(){
-  if(!rmap || !rline) return;
+  if(!rmap || !rline || !rrest) return;
   var W = rmap.clientWidth || rmap.getBoundingClientRect().width;
+  var H = rmap.clientHeight || 56;
   if(!W) return;
-  var H = 110;
   rmap.setAttribute('viewBox','0 0 '+W+' '+H);
-  var small = W < 560;
-  var pad = small ? 16 : 30;
+
+  var small = window.innerWidth <= 620;          /* совпадает с медиазапросом */
+  var low   = small ? H - 12 : H - 24;           /* нижний уровень ломаной */
+  var high  = low - (small ? 10 : 11);           /* верхний уровень */
+  var labelY = H - 3;
+  var pad = small ? 16 : 26;
   var span = W - pad*2;
+  var levels = [low,low,high,high,low,low];
   var pts = CITIES.map(function(_,i){
-    return {x: pad + span*i/(CITIES.length-1), y: LEVELS[i]};
+    return {x: pad + span*i/(CITIES.length-1), y: levels[i]};
   });
 
   /* ломаная со скосами 45 градусов на перепадах — «схема метро» */
   var d = 'M'+pts[0].x+' '+pts[0].y, lens = [], prev = pts[0];
   for(var i=1;i<pts.length;i++){
-    var p = pts[i], dy = p.y - prev.y, L = 0;
+    var pt = pts[i], dy = pt.y - prev.y, L = 0;
     if(dy === 0){
-      d += ' L'+p.x+' '+p.y;
-      L = Math.abs(p.x - prev.x);
+      d += ' L'+pt.x+' '+pt.y;
+      L = Math.abs(pt.x - prev.x);
     } else {
-      var kx = p.x - Math.abs(dy);
-      d += ' L'+kx+' '+prev.y+' L'+p.x+' '+p.y;
+      var kx = pt.x - Math.abs(dy);
+      d += ' L'+kx+' '+prev.y+' L'+pt.x+' '+pt.y;
       L = Math.abs(kx - prev.x) + Math.abs(dy)*Math.SQRT2;
     }
-    lens.push(L); prev = p;
+    lens.push(L); prev = pt;
   }
   rline.setAttribute('d',d);
+  rrest.setAttribute('d',d);
   pathLen = rline.getTotalLength();
 
-  var dotsG = $('#rdots'), labG = $('#rlabels');
-  dotsG.textContent = ''; labG.textContent = '';
+  /* длина пути до каждой точки: по ней и растёт сплошной отрезок */
+  var acc = 0; segAt = [0];
+  lens.forEach(function(L){ acc += L; segAt.push(acc); });
+
+  var g = $('#rdots');
+  g.textContent = '';
   rdots = []; rlabels = [];
 
-  /* доля длины линии до каждой точки — по ней распределяем появление */
-  var acc = 0, fracs = [0];
-  lens.forEach(function(L){ acc += L; fracs.push(acc); });
-  var total = acc || 1;
+  pts.forEach(function(pt,i){
+    /* задержка нужна только для вступительной прорисовки; после неё её снимают,
+       иначе она же тормозила бы смену активной точки на 0.4-1.6 с */
+    var delay = (ANIM && !introDone) ? Math.round(1600*(segAt[i]/(pathLen||1))) + 'ms' : '';
 
-  pts.forEach(function(p,i){
-    var delay = Math.round(1600*(fracs[i]/total)) + 'ms';
+    var st = document.createElementNS(SVGNS,'g');
+    st.setAttribute('class','rstation');
+    st.setAttribute('role','button');
+    st.setAttribute('tabindex','0');
+    st.setAttribute('aria-label','Перейти к дню '+(DOT_DAY[i]+1)+', '+CITIES[i]);
 
     var c = document.createElementNS(SVGNS,'circle');
     c.setAttribute('class','rdot');
-    c.setAttribute('cx',p.x); c.setAttribute('cy',p.y); c.setAttribute('r',5);
+    c.setAttribute('cx',pt.x); c.setAttribute('cy',pt.y); c.setAttribute('r',5);
     c.style.transitionDelay = delay;
-    dotsG.appendChild(c); rdots.push(c);
+    st.appendChild(c); rdots.push(c);
 
-    var tx = document.createElementNS(SVGNS,'text');
-    tx.setAttribute('class','rlabel');
-    tx.setAttribute('x',p.x); tx.setAttribute('y',76);
-    tx.style.transitionDelay = delay;
-    if(small) tx.style.fontSize = '9px';
-    tx.textContent = CITIES[i];
-    labG.appendChild(tx); rlabels.push(tx);
+    if(!small){
+      var tx = document.createElementNS(SVGNS,'text');
+      tx.setAttribute('class','rlabel');
+      tx.setAttribute('x',pt.x); tx.setAttribute('y',labelY);
+      tx.style.transitionDelay = delay;
+      tx.textContent = CITIES[i];
+      st.appendChild(tx); rlabels.push(tx);
+    }
+
+    /* невидимая зона нажатия 32px — чтобы в точку можно было попасть пальцем */
+    var hit = document.createElementNS(SVGNS,'circle');
+    hit.setAttribute('class','rhit');
+    hit.setAttribute('cx',pt.x); hit.setAttribute('cy',pt.y); hit.setAttribute('r',16);
+    st.appendChild(hit);
+
+    st.addEventListener('click',function(){ gotoDot(i); });
+    st.addEventListener('keydown',function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); gotoDot(i); }
+    });
+
+    g.appendChild(st);
   });
 
-  /* если хоть одна подпись не влезает в свой отрезок — на первые буквы переходят все */
-  var slot = span/(CITIES.length-1);
-  var tight = rlabels.some(function(tx){
-    var len = 0;
-    try{ len = tx.getComputedTextLength(); }catch(e){}
-    return len > slot - 6;
-  });
-  if(tight) rlabels.forEach(function(tx,i){ tx.textContent = CITIES[i].charAt(0); });
-
-  if(ANIM){
-    rline.style.strokeDasharray = pathLen;
-    if(!rmap.classList.contains('in')) rline.style.strokeDashoffset = pathLen;
+  /* если подпись не влезает в свой отрезок — на первые буквы переходят все */
+  if(rlabels.length){
+    var slot = span/(CITIES.length-1);
+    var tight = rlabels.some(function(tx){
+      var len = 0;
+      try{ len = tx.getComputedTextLength(); }catch(e){}
+      return len > slot - 6;
+    });
+    if(tight) rlabels.forEach(function(tx,i){ tx.textContent = CITIES[i].charAt(0); });
   }
-  markRouteDots(currentDay);      /* точки пересозданы — возвращаем подсветку */
+
+  if(ANIM && !introDone){
+    rline.style.transition = 'none';
+    rline.style.strokeDasharray = pathLen + ' ' + pathLen;
+    rline.style.strokeDashoffset = pathLen;
+  }
+  applyCurrent();
+}
+
+/* сплошной отрезок от старта до текущей точки, дальше — пунктир снизу */
+/* снять staggered-задержки после вступления */
+function clearStagger(){
+  rdots.forEach(function(c){ c.style.transitionDelay = ''; });
+  rlabels.forEach(function(t){ t.style.transitionDelay = ''; });
+}
+
+function drawProgress(){
+  if(!rline || !pathLen) return;
+  rline.style.strokeDasharray = pathLen + ' ' + pathLen;
+  rline.style.strokeDashoffset = pathLen - (introDone ? (segAt[DAY_DOT[curDay]] || 0) : pathLen);
+}
+
+function applyCurrent(){
+  var dot = DAY_DOT[curDay];
+  if(rnow) rnow.textContent = 'День ' + ('0'+(curDay+1)).slice(-2) + ' · ' + CITIES[dot];
+  rdots.forEach(function(c,k){ c.classList.toggle('active', k === dot); });
+  rlabels.forEach(function(t,k){ t.classList.toggle('active', k === dot); });
+  drawProgress();
+}
+
+function setCurrentDay(i,fromClick){
+  i = Math.max(0, Math.min(dayRows.length - 1, i));
+  if(fromClick) lockDay = i;
+  if(i === curDay && !fromClick) return;
+  curDay = i;
+  applyCurrent();
+}
+
+/* текущий день — последний, чей .day-row пересёк линию в 24px под баром */
+function dayFromScroll(){
+  var line = barBottom() + 24, idx = 0;
+  for(var i=0;i<dayRows.length;i++){
+    if(dayRows[i].getBoundingClientRect().top <= line) idx = i; else break;
+  }
+  return idx;
+}
+
+function syncFromScroll(){
+  if(!dayRows.length) return;
+  var i = dayFromScroll();
+  if(lockDay >= 0){
+    /* выбор кликом держится, пока не пролистали дальше соседнего дня */
+    if(Math.abs(i - lockDay) <= 1) return;
+    lockDay = -1;
+  }
+  setCurrentDay(i,false);
+}
+
+/* клик по станции: прокрутка к дню под бар + раскрытие, если день закрыт */
+function gotoDot(dotIndex){
+  var dayIdx = DOT_DAY[dotIndex];
+  if(dayIdx < 0 || !dayRows[dayIdx]) return;
+  var row = dayRows[dayIdx];
+  if(row.parentElement.getAttribute('data-open') !== '1'){
+    row.click();                       /* обработчик дня сам откроет его и обновит бар */
+  } else {
+    setCurrentDay(dayIdx,true);
+  }
+  var y = window.pageYOffset + row.getBoundingClientRect().top - barHeight() - 8;
+  window.scrollTo({top: Math.max(0,y), behavior: ANIM ? 'smooth' : 'auto'});
 }
 
 function drawRoute(){
-  if(!rline || !rmap) return;
-  if(ANIM){
-    rline.style.transition = 'stroke-dashoffset 1.6s ' + EASE;
-    rline.style.strokeDashoffset = 0;
-  }
+  if(!rmap) return;
   rmap.classList.add('in');
-}
-
-function markRouteDots(dayIndex){
-  currentDay = dayIndex;
-  if(!rdots.length) return;
-  var on = DAY_DOTS[dayIndex] || [];
-  rdots.forEach(function(c,i){ c.classList.toggle('active', on.indexOf(i) !== -1); });
+  if(!ANIM){
+    introDone = true;
+    rmap.classList.add('drawn');
+    clearStagger();
+    drawProgress();
+    return;
+  }
+  /* сначала линия прорисовывается целиком, затем «будущее» уходит в пунктир,
+     а сплошной отрезок подтягивается к текущему дню */
+  rline.style.transition = 'stroke-dashoffset 1.6s ' + EASE;
+  rline.style.strokeDashoffset = 0;
+  setTimeout(function(){
+    introDone = true;
+    rmap.classList.add('drawn');
+    clearStagger();
+    rline.style.transition = 'stroke-dashoffset .4s ' + EASE;
+    drawProgress();
+  }, 1600);
 }
 
 /* ============ 4. САМОЛЁТ ============ */
@@ -1314,10 +1463,8 @@ $$('.day-row').forEach(function(btn,idx){
     var d = btn.parentElement, open = d.getAttribute('data-open') === '1';
     d.setAttribute('data-open', open ? '0' : '1');
     btn.setAttribute('aria-expanded', open ? 'false' : 'true');
-    if(!open){
-      markRouteDots(idx);
-      $$('.ph',d).forEach(function(ph){ ph.classList.add('shown'); });
-    }
+    setCurrentDay(idx,true);
+    if(!open) $$('.ph',d).forEach(function(ph){ ph.classList.add('shown'); });
     /* панель меняет высоту — геометрию линии пересчитываем после раскрытия */
     setTimeout(function(){ layoutSpine(); updateSpine(); }, 480);
   });
@@ -1353,22 +1500,25 @@ function buildAll(){
 
 function boot(){
   buildAll();
-  markRouteDots(0);                       /* первый день открыт по умолчанию */
+  applyCurrent();                         /* первый день открыт по умолчанию */
   $$('.day[data-open="1"] .ph').forEach(function(ph){ ph.classList.add('shown'); });
 
   if(!ANIM){
-    if(rmap) rmap.classList.add('in');
+    /* анимации выключены — всё сразу в конечном состоянии */
+    if(rmap) drawRoute();
     if(fmap) fmap.classList.add('in');
     if(spineFill) spineFill.style.transform = 'scaleY(1)';
     dayNums.forEach(function(n){ n.classList.add('lit'); });
     buildFlight();
     runCounters();
-    return;
+  } else {
+    reveal(rmap, drawRoute);
+    reveal(fmap, flyPlane);
   }
-  reveal(rmap, drawRoute);
-  reveal(fmap, flyPlane);
+  /* навигация по дням — не украшение: слушатель нужен и без анимаций */
   window.addEventListener('scroll', onScroll, {passive:true});
   onScroll();
+  syncFromScroll();
 }
 
 if(document.readyState === 'loading'){
