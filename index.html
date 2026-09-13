@@ -8,6 +8,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+/* до первой отрисовки: анимации включаются только если их не просили выключить */
+try{
+  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.documentElement.className += ' anim';
+  }
+}catch(e){}
+</script>
 <style>
 :root{
   --paper:#F7F5F1;
@@ -19,6 +27,7 @@
   --copper-2:#B8825A;
   --line:#E3DDD5;
   --maxw:1040px;
+  --ease:cubic-bezier(.22,1,.36,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
@@ -63,16 +72,25 @@ img{display:block;max-width:100%}
 
 /* buttons */
 .btn{
-  display:inline-block;padding:15px 34px;
+  display:inline-block;position:relative;overflow:hidden;isolation:isolate;
+  padding:15px 34px;
   background:var(--ink);color:#fff;text-decoration:none;
   font-size:12px;letter-spacing:.24em;text-transform:uppercase;font-weight:600;
-  transition:background .2s ease;
+  transition:color .3s ease,transform .12s ease;
 }
-.btn:hover{background:#2E2420}
+.btn::before{
+  content:'';position:absolute;inset:0;z-index:-1;background:#2E2420;
+  transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease);
+}
 .btn.copper{background:var(--copper)}
-.btn.copper:hover{background:var(--copper-2)}
+.btn.copper::before{background:var(--copper-2)}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
-.btn.ghost:hover{background:var(--ink);color:#fff}
+.btn.ghost::before{background:var(--ink)}
+@media (hover:hover){
+  .btn:hover::before{transform:scaleX(1)}
+  .btn.ghost:hover{color:#fff}
+}
+.btn:active{transform:scale(.985)}
 
 /* hero */
 .top{
@@ -120,8 +138,9 @@ p+p{margin-top:16px}
 .plus{position:relative;width:14px;height:14px;margin-top:6px;justify-self:end}
 .plus::before,.plus::after{content:'';position:absolute;background:var(--copper);left:50%;top:50%;transform:translate(-50%,-50%)}
 .plus::before{width:14px;height:1px}
-.plus::after{width:1px;height:14px;transition:opacity .25s}
-.day[data-open="1"] .plus::after{opacity:0}
+.plus::after{width:1px;height:14px}
+.anim .plus{transition:transform .3s var(--ease)}
+.day[data-open="1"] .plus{transform:rotate(45deg)}
 .panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.4,0,.2,1)}
 .day[data-open="1"] .panel{grid-template-rows:1fr}
 .panel-in{overflow:hidden}
@@ -219,7 +238,16 @@ p+p{margin-top:16px}
   padding:18px 20px;border:1px solid var(--line);text-decoration:none;color:inherit;
   transition:border-color .2s,background .2s;
 }
-.cbtn:hover{border-color:var(--copper);background:#fff}
+.cbtn{transition:border-color .3s ease,background .3s ease,transform .12s ease}
+.cbtn .ico,.cbtn .ico-f,.cbtn .ico-s{transition:fill .3s ease,stroke .3s ease}
+.cbtn .arr{transition:stroke .3s ease,transform .3s var(--ease)}
+@media (hover:hover){
+  .cbtn:hover{border-color:var(--copper);background:#fff}
+  .cbtn:hover .arr{transform:translateX(4px)}
+  .cbtn:hover .ico-f{fill:var(--copper-2)}
+  .cbtn:hover .ico-s{stroke:var(--copper-2)}
+}
+.cbtn:active{transform:scale(.985)}
 .cbtn .ico{width:22px;height:22px;display:block}
 .ico-f{fill:var(--copper)}
 .ico-s{fill:none;stroke:var(--copper);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
@@ -229,7 +257,7 @@ p+p{margin-top:16px}
   width:12px;height:12px;fill:none;stroke:var(--muted);stroke-width:1.6;
   stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s;
 }
-.cbtn:hover .arr{stroke:var(--copper)}
+@media (hover:hover){.cbtn:hover .arr{stroke:var(--copper)}}
 .sign .ital{font-size:18px;color:var(--muted);line-height:1.5;margin-bottom:10px;display:block}
 .sign .name{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);font-weight:600}
 
@@ -257,7 +285,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
 @media (max-width:860px){
   .two{grid-template-columns:1fr;gap:30px}
   .two .ph{aspect-ratio:4/3}
-  .day-body{grid-template-columns:1fr;padding-left:0;gap:24px}
+  .day-body{grid-template-columns:1fr;padding-left:34px;gap:24px}  /* гутер под линию маршрута */
   .day-row{grid-template-columns:64px 1fr 16px;gap:16px}
   .day-num{font-size:24px}
   .hotels{grid-template-columns:1fr}
@@ -304,9 +332,136 @@ footer .lbl{font-size:10px;color:var(--muted)}
 @media (max-width:480px){
   .cgrid{grid-template-columns:1fr}
 }
+
+/* ============================================================
+   MOTION
+   Всё скрывающее состояние живёт под html.anim — класс ставится
+   в <head> только если prefers-reduced-motion не reduce. Без JS
+   и при reduce-motion страница статична и полностью видима.
+   ============================================================ */
+
+/* --- 5. появление при прокрутке --- */
+.anim .rv{opacity:0;transform:translateY(12px)}
+.anim .rv.in{opacity:1;transform:none}
+.anim .rv{transition:opacity .8s var(--ease),transform .8s var(--ease)}
+
+/* --- 5. фото: маска + наезд --- */
+.anim .ph img{opacity:0;transform:scale(1.04);transition:opacity 1.1s var(--ease),transform 1.1s var(--ease)}
+.anim .ph.shown img{opacity:1;transform:none}
+
+/* --- 5. медная линия eyebrow (scaleX вместо width: тот же вид, только transform) --- */
+.anim .eyebrow::before{transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease)}
+.anim .eyebrow.in::before{transform:scaleX(1)}
+
+/* --- 1. загрузка hero --- */
+.anim .top .lbl,
+.anim .hero .ital,
+.anim .hero h1,
+.anim .hero > .wrap > .lbl,
+.anim .hero .route,
+.anim .hero > .wrap > .btn{opacity:0}
+.anim .hero h1{letter-spacing:.08em}
+.anim .hero .ph{clip-path:inset(100% 0 0 0)}
+.anim .hero .ph img{transform:scale(1.06)}
+
+.anim.loaded .top .lbl{opacity:1;transition:opacity .4s var(--ease)}
+.anim.loaded .hero .ital,
+.anim.loaded .hero > .wrap > .lbl:not(.route){opacity:1;transition:opacity .7s var(--ease) .1s}
+.anim.loaded .hero h1{
+  opacity:1;letter-spacing:.005em;
+  transition:opacity .9s var(--ease) .2s,letter-spacing .9s var(--ease) .2s;
+}
+.anim.loaded .hero .ph{clip-path:inset(0 0 0 0);transition:clip-path 1.1s var(--ease) .4s}
+.anim.loaded .hero .ph img{opacity:1;transform:none;transition:opacity 1.1s var(--ease) .4s,transform 1.1s var(--ease) .4s}
+.anim.loaded .hero .route,
+.anim.loaded .hero > .wrap > .btn{opacity:1;transition:opacity .8s var(--ease) 1s}
+
+/* --- 2. линия маршрута в днях --- */
+.days{position:relative}
+.spine,.spine-fill{position:absolute;width:1px;top:0;pointer-events:none}
+.spine{background:var(--line)}
+.spine-fill{background:var(--copper);transform:scaleY(0);transform-origin:top}
+.day-row{position:relative;transition:background .3s ease}
+.day-num{
+  position:relative;display:inline-block;padding:2px 9px;margin-left:-9px;
+  background:var(--paper);transition:color .4s ease,background .3s ease;
+}
+.anim .day-num{color:var(--muted)}
+.anim .day-num.lit{color:var(--copper)}
+@media (hover:hover){
+  .day-row:hover{background:var(--paper-2)}
+  .day-row:hover .day-num{background:var(--paper-2);color:var(--copper)}
+}
+
+/* --- 3. схема маршрута --- */
+.routemap{width:100%;height:110px;display:block;margin:26px 0 6px;overflow:visible}
+.routemap .rline{fill:none;stroke:var(--copper);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.routemap .rdot{fill:var(--paper);stroke:var(--copper);stroke-width:1.5;transform-box:fill-box;transform-origin:center}
+.anim .routemap .rdot{opacity:0;transform:scale(.2);transition:opacity .5s var(--ease),transform .5s var(--ease),fill .4s ease}
+.anim .routemap.in .rdot{opacity:1;transform:scale(1)}
+.routemap .rdot.active{fill:var(--copper)}
+.anim .routemap.in .rdot.active{transform:scale(1.4)}
+.routemap .rlabel{
+  fill:var(--muted);font-family:'Manrope',sans-serif;font-size:10px;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;text-anchor:middle;
+}
+.anim .routemap .rlabel{opacity:0;transition:opacity .5s var(--ease)}
+.anim .routemap.in .rlabel{opacity:1}
+
+/* --- 4. самолёт --- */
+.flightmap{width:100%;height:90px;display:block;margin-bottom:10px;overflow:visible}
+.flightmap .farc{fill:none;stroke:var(--copper);stroke-width:1.2;stroke-dasharray:4 5;opacity:.85}
+.flightmap .fplane{fill:none;stroke:var(--copper);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.flightmap .fcity{
+  fill:var(--muted);font-family:'Manrope',sans-serif;font-size:10px;font-weight:600;
+  letter-spacing:.26em;text-transform:uppercase;
+}
+.anim .flightmap .fplane-g{opacity:0}
+.anim .flightmap.in .fplane-g{opacity:1;transition:opacity .3s var(--ease)}
+
+/* --- 6. цена --- */
+.anim .price .big{clip-path:inset(0 100% 0 0)}
+.anim .price .addon,.anim .price .total{opacity:0;transform:translateY(8px)}
+.anim .price.in .big{clip-path:inset(0 0 0 0);transition:clip-path .9s var(--ease)}
+.anim .price.in .addon{opacity:1;transform:none;transition:opacity .8s var(--ease) .3s,transform .8s var(--ease) .3s}
+.anim .price.in .total{opacity:1;transform:none;transition:opacity .8s var(--ease) .5s,transform .8s var(--ease) .5s}
+
+/* --- 7. аккордеон --- */
+.anim .day-body .ph img{opacity:1;transform:scale(1.08)}
+.anim .day[data-open="1"] .day-body .ph img{transform:none;transition:transform 1s var(--ease)}
+.anim .prog li{opacity:0;transform:translateY(6px)}
+.anim .day[data-open="1"] .prog li{
+  opacity:1;transform:none;
+  transition:opacity .5s var(--ease) calc(var(--i) * 60ms),transform .5s var(--ease) calc(var(--i) * 60ms);
+}
+
+/* --- 8. реакции --- */
+@media (hover:hover){
+  .anim .ph.shown img{transition:opacity 1.1s var(--ease),transform 1s var(--ease)}
+  .anim .hotel:hover .ph.shown img,
+  .anim .two .ph.shown:hover img,
+  .anim .why-two .ph.shown:hover img,
+  .anim .price .ph.shown:hover img,
+  .anim .day-body .ph:hover img{transform:scale(1.03)}
+}
+@keyframes breathe{0%{transform:scale(1)}45%{transform:scale(1.02)}100%{transform:scale(1)}}
+.anim .sticky .btn.breathe{animation:breathe 1.2s var(--ease)}
+
 @media (prefers-reduced-motion:reduce){
-  *{transition-duration:.01ms !important}
+  *,*::before,*::after{
+    transition-duration:.01ms !important;animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+  }
   html{scroll-behavior:auto}
+  .rv,.ph img,.prog li,.routemap .rdot,.routemap .rlabel,
+  .flightmap .fplane-g,.hero .ital,.hero h1,.hero .lbl,.hero .route,.top .lbl{
+    opacity:1 !important;transform:none !important;
+  }
+  .hero .ph{clip-path:none !important}
+  .price .big{clip-path:none !important}
+  .eyebrow::before{transform:none !important}
+  .day-num{color:var(--copper) !important}
+  .spine-fill{transform:scaleY(1) !important}
 }
 :focus-visible{outline:2px solid var(--copper);outline-offset:3px}
 </style>
@@ -331,16 +486,16 @@ footer .lbl{font-size:10px;color:var(--muted)}
     <a class="btn" href="#contacts">Узнать свободные даты</a>
 
     <div class="stats">
-      <div class="stat"><div class="v">7</div><div class="k">дней</div></div>
-      <div class="stat"><div class="v">4</div><div class="k">имперских города</div></div>
-      <div class="stat"><div class="v">≈ 1 400 км</div><div class="k">маршрута</div></div>
-      <div class="stat"><div class="v">103 733 ₽</div><div class="k">тур, от</div></div>
+      <div class="stat rv"><div class="v">7</div><div class="k">дней</div></div>
+      <div class="stat rv"><div class="v">4</div><div class="k">имперских города</div></div>
+      <div class="stat rv"><div class="v">≈ 1 400 км</div><div class="k">маршрута</div></div>
+      <div class="stat rv"><div class="v">103 733 ₽</div><div class="k">тур, от</div></div>
     </div>
   </div>
 </header>
 
 <!-- ============ ABOUT ============ -->
-<section>
+<section class="rv">
   <div class="wrap">
     <div class="eyebrow"><span class="lbl">О путешествии</span></div>
     <div class="two">
@@ -359,13 +514,21 @@ footer .lbl{font-size:10px;color:var(--muted)}
 </section>
 
 <!-- ============ DAYS ============ -->
-<section style="padding-top:20px">
+<section class="rv" style="padding-top:20px">
   <div class="wrap">
     <div class="eyebrow"><span class="lbl">Маршрут</span></div>
     <h2 class="sec-h2">Семь дней по дням</h2>
     <p class="lead-i" style="margin-bottom:10px">Нажмите на день — откроется программа и фотографии.</p>
 
+    <svg class="routemap" id="routemap" role="img" aria-label="Схема маршрута: Касабланка, Рабат, Фес, Марракеш, Эссувейра, Касабланка" preserveAspectRatio="xMinYMin meet">
+      <path class="rline" id="rline"></path>
+      <g id="rdots"></g>
+      <g id="rlabels"></g>
+    </svg>
+
     <div class="days" id="days">
+      <div class="spine" aria-hidden="true"></div>
+      <div class="spine-fill" aria-hidden="true"></div>
 
       <!-- DAY 1 -->
       <div class="day" data-open="1">
@@ -615,28 +778,28 @@ footer .lbl{font-size:10px;color:var(--muted)}
 </section>
 
 <!-- ============ HOTELS ============ -->
-<section style="padding-top:20px">
+<section class="rv" style="padding-top:20px">
   <div class="wrap">
     <div class="eyebrow"><span class="lbl">Размещение · 6 ночей</span></div>
     <h2 class="sec-h2">Где остановимся</h2>
     <p class="lead-i">Отели 3* и 4* на базе полупансиона, подбираются под каждую группу индивидуально.</p>
 
     <div class="hotels">
-      <div class="hotel">
+      <div class="hotel rv">
         <figure class="ph"><img src="img/h-casablanca.jpg" alt="" onerror="this.parentElement.classList.add('missing')"><div class="cap"><span>Касабланка</span></div></figure>
         <span class="lbl">1 ночь</span>
         <h3>Касабланка</h3>
         <p>Первая ночь после перелёта — рядом с центром, чтобы утром не терять времени.</p>
         <span class="tag">Подбирается под вас</span>
       </div>
-      <div class="hotel">
+      <div class="hotel rv">
         <figure class="ph"><img src="img/h-fes.jpg" alt="" onerror="this.parentElement.classList.add('missing')"><div class="cap"><span>Фес</span></div></figure>
         <span class="lbl">2 ночи</span>
         <h3>Фес</h3>
         <p>Две ночи у старейшей медины мира. По желанию — риад в старом городе вместо сетевого отеля.</p>
         <span class="tag">Подбирается под вас</span>
       </div>
-      <div class="hotel">
+      <div class="hotel rv">
         <figure class="ph"><img src="img/h-marrakech.jpg" alt="" onerror="this.parentElement.classList.add('missing')"><div class="cap"><span>Марракеш</span></div></figure>
         <span class="lbl">3 ночи</span>
         <h3>Марракеш</h3>
@@ -645,7 +808,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
       </div>
     </div>
 
-    <div class="box">
+    <div class="box rv">
       <p class="ital">Мы смотрим на ваши даты, состав и пожелания, а не выдаём всем один и тот же вариант из каталога. Хотите риад вместо отеля — скажите заранее, это решаемо.</p>
       <a class="btn ghost" href="#contacts">Обсудить размещение</a>
     </div>
@@ -653,12 +816,28 @@ footer .lbl{font-size:10px;color:var(--muted)}
 </section>
 
 <!-- ============ FLIGHT ============ -->
-<section style="padding-top:20px">
+<section class="rv" style="padding-top:20px">
   <div class="wrap">
     <div class="eyebrow"><span class="lbl">Перелёт</span></div>
     <h2 class="sec-h2">Прямой рейс,<br>шесть часов над Европой</h2>
 
-    <div class="flight">
+    <svg class="flightmap" id="flightmap" role="img" aria-label="Прямой рейс Москва — Касабланка" preserveAspectRatio="xMinYMin meet">
+      <defs>
+        <clipPath id="fclip"><rect id="fcliprect" x="0" y="0" width="0" height="90"></rect></clipPath>
+      </defs>
+      <g clip-path="url(#fclip)">
+        <path class="farc" id="farc"></path>
+      </g>
+      <text class="fcity" id="fsvo" x="0" y="80">SVO</text>
+      <text class="fcity" id="fcmn" y="80" text-anchor="end">CMN</text>
+      <g class="fplane-g" id="fplane">
+        <g transform="scale(.7)">
+          <path class="fplane" d="M11 0 L-2 -1.6 L-9 -7 L-11 -7 L-7 -1.6 L-11.5 -1 L-13 -3.6 L-14.6 -3.6 L-13.6 0 L-14.6 3.6 L-13 3.6 L-11.5 1 L-7 1.6 L-11 7 L-9 7 L-2 1.6 Z"></path>
+        </g>
+      </g>
+    </svg>
+
+    <div class="flight rv">
       <div>
         <div class="k">Авиакомпания</div>
         <div class="v">Royal Air Maroc</div>
@@ -685,7 +864,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
 </section>
 
 <!-- ============ INCLUDES ============ -->
-<section style="padding-top:20px">
+<section class="rv" style="padding-top:20px">
   <div class="wrap">
     <div class="eyebrow"><span class="lbl">Под ключ</span></div>
     <h2 class="sec-h2">Что уже сделано за вас</h2>
@@ -753,7 +932,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
 </section>
 
 <!-- ============ WHY ============ -->
-<section class="why" style="padding-top:20px">
+<section class="why rv" style="padding-top:20px">
   <div class="wrap">
     <div class="eyebrow"><span class="lbl">Зачем вам я</span></div>
     <div class="why-two">
@@ -772,14 +951,14 @@ footer .lbl{font-size:10px;color:var(--muted)}
       </div>
     </div>
 
-    <div class="quote">
+    <div class="quote rv">
       <p class="ital">«Моя главная задача — ваш комфорт, ваши эмоции и оптимизация затрат на ваши путешествия»</p>
     </div>
   </div>
 </section>
 
 <!-- ============ PRICE ============ -->
-<section class="price">
+<section class="price rv">
   <div class="wrap">
     <figure class="ph">
       <img src="img/price-marrakech.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
@@ -796,27 +975,27 @@ footer .lbl{font-size:10px;color:var(--muted)}
 </section>
 
 <!-- ============ CONTACTS ============ -->
-<section class="contacts" id="contacts">
+<section class="contacts rv" id="contacts">
   <div class="wrap">
     <span class="ital">Забронировать даты</span>
 
     <div class="cgrid">
-      <a class="cbtn" href="https://t.me/lanatravelclub">
+      <a class="cbtn rv" href="https://t.me/lanatravelclub">
         <svg class="ico ico-f" viewBox="0 0 24 24" aria-hidden="true"><path d="M21.9 4.3 18.6 20c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1 9.3-8.4c.4-.4-.1-.6-.6-.2L6 12.4l-5-1.6c-1.1-.3-1.1-1 .2-1.5l19.4-7.5c.9-.3 1.7.2 1.3 2.5z"/></svg>
         <span><span class="t">Telegram</span><span class="s">@lanatravelclub</span></span>
         <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 1.5 8 6l-4.5 4.5"/></svg>
       </a>
-      <a class="cbtn" href="https://wa.me/79219086624">
+      <a class="cbtn rv" href="https://wa.me/79219086624">
         <svg class="ico ico-f" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5-4.5-.2-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.5-.3.3c-.1.1-.2.3 0 .5.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.2.1.4.1.5-.1l.7-.9c.2-.2.3-.2.5-.1l2 .9c.2.1.4.2.4.3.1.2.1.6-.1 1.1z"/></svg>
         <span><span class="t">WhatsApp</span><span class="s">+7 921 908 66 24</span></span>
         <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 1.5 8 6l-4.5 4.5"/></svg>
       </a>
-      <a class="cbtn" href="https://www.instagram.com/lanatravelclub">
+      <a class="cbtn rv" href="https://www.instagram.com/lanatravelclub">
         <svg class="ico ico-s" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="var(--copper)" stroke="none"/></svg>
         <span><span class="t">Instagram</span><span class="s">@lanatravelclub</span></span>
         <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 1.5 8 6l-4.5 4.5"/></svg>
       </a>
-      <a class="cbtn" href="https://vk.com/lanatravelclub">
+      <a class="cbtn rv" href="https://vk.com/lanatravelclub">
         <svg class="ico ico-f" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.9 16.9c-5.4 0-8.7-3.8-8.8-10h2.8c.1 4.6 2.1 6.5 3.7 6.9V6.9h2.6v4c1.5-.2 3.2-1.9 3.7-4h2.6c-.4 2.5-2.1 4.2-3.4 4.9 1.3.6 3.2 2.1 3.9 5h-2.9c-.6-1.8-2-3.3-3.9-3.5v3.5h-.3z"/></svg>
         <span><span class="t">VK</span><span class="s">vk.com/lanatravelclub</span></span>
         <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 1.5 8 6l-4.5 4.5"/></svg>
@@ -844,20 +1023,368 @@ footer .lbl{font-size:10px;color:var(--muted)}
 </div>
 
 <script>
-document.querySelectorAll('.day-row').forEach(function(btn){
+(function(){
+'use strict';
+
+var ANIM = document.documentElement.classList.contains('anim');
+var EASE = 'cubic-bezier(.22,1,.36,1)';
+var SVGNS = 'http://www.w3.org/2000/svg';
+
+function $(sel,root){return (root||document).querySelector(sel);}
+function $$(sel,root){return Array.prototype.slice.call((root||document).querySelectorAll(sel));}
+
+/* один общий IntersectionObserver: каждый элемент срабатывает ровно один раз */
+var onceCbs = new WeakMap();
+var once = ('IntersectionObserver' in window) ? new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(!e.isIntersecting) return;
+    once.unobserve(e.target);
+    var cb = onceCbs.get(e.target);
+    onceCbs['delete'](e.target);
+    if(cb) cb(e.target);
+  });
+},{threshold:0.15}) : null;
+
+function reveal(el,cb){
+  if(!el) return;
+  if(!ANIM || !once){ if(cb) cb(el); return; }
+  onceCbs.set(el,cb);
+  once.observe(el);
+}
+
+/* ============ 1. ЗАГРУЗКА ============ */
+requestAnimationFrame(function(){
+  requestAnimationFrame(function(){ document.documentElement.classList.add('loaded'); });
+});
+
+/* ============ 1д. СЧЁТЧИКИ В .stats ============ */
+function runCounters(){
+  $$('.stats .v').forEach(function(el){
+    var finalText = el.textContent;
+    var digits = finalText.replace(/[^0-9]/g,'');
+    if(!digits) return;
+    var target = parseInt(digits,10);
+    if(!ANIM){ el.textContent = finalText; return; }
+    /* число заменяем на плейсхолдер, знаки (приблизительно, км, рубль) остаются на месте */
+    var numMatch = finalText.match(/[0-9][0-9  ]*[0-9]|[0-9]/);
+    var MARK = '%N%';
+    var tpl = finalText.replace(numMatch[0], MARK);
+    var sep = / /.test(numMatch[0]) ? ' ' : ' ';
+    var t0 = 0, DUR = 1200;
+    function group(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,sep); }
+    function frame(ts){
+      if(!t0) t0 = ts;
+      var t = Math.min(1,(ts-t0)/DUR);
+      var e = 1 - Math.pow(1-t,3);                 /* замедление в конце */
+      if(t < 1){
+        el.textContent = tpl.replace(MARK, group(Math.round(target*e)));
+        requestAnimationFrame(frame);
+      } else {
+        el.textContent = finalText;                /* точное итоговое значение */
+      }
+    }
+    el.textContent = tpl.replace(MARK,'0');
+    requestAnimationFrame(frame);
+  });
+}
+reveal($('.stats'), runCounters);
+
+/* ============ 5. ПОЯВЛЕНИЕ ПРИ ПРОКРУТКЕ ============ */
+/* шаг 80 мс между соседями внутри одной сетки */
+['.stats','.hotels','.cgrid'].forEach(function(sel){
+  var grid = $(sel); if(!grid) return;
+  $$('.rv',grid).forEach(function(el,i){ el.style.transitionDelay = (i*80)+'ms'; });
+});
+
+$$('.rv').forEach(function(el){ reveal(el,function(t){ t.classList.add('in'); }); });
+$$('.eyebrow').forEach(function(el){ reveal(el,function(t){ t.classList.add('in'); }); });
+
+/* фото раскрываются отдельно от блока; внутри дней — по открытию дня */
+$$('.ph').forEach(function(ph){
+  if(ph.closest && ph.closest('.day-body')) return;
+  reveal(ph,function(t){ t.classList.add('shown'); });
+});
+
+/* ============ 2. ЛИНИЯ МАРШРУТА ============ */
+var days = $('#days');
+var spine = $('.spine'), spineFill = $('.spine-fill');
+var dayRows = $$('.day-row'), dayNums = $$('.day-num');
+var spineTop = 0, spineH = 0;
+
+function layoutSpine(){
+  if(!days || !spine || !dayRows.length) return;
+  var box = days.getBoundingClientRect();
+  var first = dayRows[0].getBoundingClientRect();
+  var last  = dayRows[dayRows.length-1].getBoundingClientRect();
+  /* x берём по центру самих цифр, а не колонки: меряем текстовый прямоугольник */
+  var r = document.createRange();
+  r.selectNodeContents(dayNums[0]);
+  var t = r.getBoundingClientRect();
+  var x = Math.round(t.left - box.left + t.width/2);
+  spineTop = first.top - box.top;
+  spineH   = (last.bottom - box.top) - spineTop;
+  [spine,spineFill].forEach(function(el){
+    el.style.left = x + 'px';
+    el.style.top = spineTop + 'px';
+    el.style.height = spineH + 'px';
+  });
+}
+
+function updateSpine(){
+  if(!days || !spineFill || !spineH) return;
+  if(!ANIM){                                  /* без анимаций линия и цифры сразу активны */
+    spineFill.style.transform = 'scaleY(1)';
+    dayNums.forEach(function(n){ n.classList.add('lit'); });
+    return;
+  }
+  var box = days.getBoundingClientRect();
+  var start = box.top + spineTop;
+  var p = (window.innerHeight/2 - start) / spineH;
+  p = Math.max(0, Math.min(1, p));
+  spineFill.style.transform = 'scaleY(' + p + ')';
+  var reached = start + p * spineH;
+  dayNums.forEach(function(n){
+    var nb = n.getBoundingClientRect();
+    n.classList.toggle('lit', reached >= nb.top + nb.height/2);
+  });
+}
+
+var spineTick = false;
+function onScroll(){
+  if(spineTick) return;
+  spineTick = true;
+  requestAnimationFrame(function(){ spineTick = false; updateSpine(); });
+}
+
+/* ============ 3. СХЕМА МАРШРУТА ============ */
+var CITIES = ['Касабланка','Рабат','Фес','Марракеш','Эссувейра','Касабланка'];
+var LEVELS = [44,44,30,30,44,44];
+var DAY_DOTS = [[0],[1,2],[2],[3],[3],[4],[5]];
+var rmap = $('#routemap'), rline = $('#rline');
+var rdots = [], rlabels = [], pathLen = 0, currentDay = 0;
+
+function buildRoute(){
+  if(!rmap || !rline) return;
+  var W = rmap.clientWidth || rmap.getBoundingClientRect().width;
+  if(!W) return;
+  var H = 110;
+  rmap.setAttribute('viewBox','0 0 '+W+' '+H);
+  var small = W < 560;
+  var pad = small ? 16 : 30;
+  var span = W - pad*2;
+  var pts = CITIES.map(function(_,i){
+    return {x: pad + span*i/(CITIES.length-1), y: LEVELS[i]};
+  });
+
+  /* ломаная со скосами 45 градусов на перепадах — «схема метро» */
+  var d = 'M'+pts[0].x+' '+pts[0].y, lens = [], prev = pts[0];
+  for(var i=1;i<pts.length;i++){
+    var p = pts[i], dy = p.y - prev.y, L = 0;
+    if(dy === 0){
+      d += ' L'+p.x+' '+p.y;
+      L = Math.abs(p.x - prev.x);
+    } else {
+      var kx = p.x - Math.abs(dy);
+      d += ' L'+kx+' '+prev.y+' L'+p.x+' '+p.y;
+      L = Math.abs(kx - prev.x) + Math.abs(dy)*Math.SQRT2;
+    }
+    lens.push(L); prev = p;
+  }
+  rline.setAttribute('d',d);
+  pathLen = rline.getTotalLength();
+
+  var dotsG = $('#rdots'), labG = $('#rlabels');
+  dotsG.textContent = ''; labG.textContent = '';
+  rdots = []; rlabels = [];
+
+  /* доля длины линии до каждой точки — по ней распределяем появление */
+  var acc = 0, fracs = [0];
+  lens.forEach(function(L){ acc += L; fracs.push(acc); });
+  var total = acc || 1;
+
+  pts.forEach(function(p,i){
+    var delay = Math.round(1600*(fracs[i]/total)) + 'ms';
+
+    var c = document.createElementNS(SVGNS,'circle');
+    c.setAttribute('class','rdot');
+    c.setAttribute('cx',p.x); c.setAttribute('cy',p.y); c.setAttribute('r',5);
+    c.style.transitionDelay = delay;
+    dotsG.appendChild(c); rdots.push(c);
+
+    var tx = document.createElementNS(SVGNS,'text');
+    tx.setAttribute('class','rlabel');
+    tx.setAttribute('x',p.x); tx.setAttribute('y',76);
+    tx.style.transitionDelay = delay;
+    if(small) tx.style.fontSize = '9px';
+    tx.textContent = CITIES[i];
+    labG.appendChild(tx); rlabels.push(tx);
+  });
+
+  /* если хоть одна подпись не влезает в свой отрезок — на первые буквы переходят все */
+  var slot = span/(CITIES.length-1);
+  var tight = rlabels.some(function(tx){
+    var len = 0;
+    try{ len = tx.getComputedTextLength(); }catch(e){}
+    return len > slot - 6;
+  });
+  if(tight) rlabels.forEach(function(tx,i){ tx.textContent = CITIES[i].charAt(0); });
+
+  if(ANIM){
+    rline.style.strokeDasharray = pathLen;
+    if(!rmap.classList.contains('in')) rline.style.strokeDashoffset = pathLen;
+  }
+  markRouteDots(currentDay);      /* точки пересозданы — возвращаем подсветку */
+}
+
+function drawRoute(){
+  if(!rline || !rmap) return;
+  if(ANIM){
+    rline.style.transition = 'stroke-dashoffset 1.6s ' + EASE;
+    rline.style.strokeDashoffset = 0;
+  }
+  rmap.classList.add('in');
+}
+
+function markRouteDots(dayIndex){
+  currentDay = dayIndex;
+  if(!rdots.length) return;
+  var on = DAY_DOTS[dayIndex] || [];
+  rdots.forEach(function(c,i){ c.classList.toggle('active', on.indexOf(i) !== -1); });
+}
+
+/* ============ 4. САМОЛЁТ ============ */
+var fmap = $('#flightmap'), farc = $('#farc'), fclip = $('#fcliprect'),
+    fplane = $('#fplane'), fcmn = $('#fcmn');
+
+function placePlane(t){
+  if(!farc || !fplane) return;
+  var L = farc.getTotalLength();
+  var at = L*t;
+  var p = farc.getPointAtLength(at);
+  /* у самого конца берём касательную назад, иначе две точки совпадают и угол теряется */
+  var back = at > L - 1;
+  var q = farc.getPointAtLength(back ? at - 1 : Math.min(L, at + 1));
+  var a = Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI;
+  if(back) a += 180;
+  fplane.setAttribute('transform','translate('+p.x+','+p.y+') rotate('+a+')');
+}
+
+function buildFlight(){
+  if(!fmap || !farc) return;
+  var W = fmap.clientWidth || fmap.getBoundingClientRect().width;
+  if(!W) return;
+  var H = 90;
+  fmap.setAttribute('viewBox','0 0 '+W+' '+H);
+  var x0 = 44, x1 = W - 44;
+  farc.setAttribute('d','M'+x0+' 58 Q'+((x0+x1)/2)+' 4 '+x1+' 58');
+  fclip.setAttribute('height',H);
+  if(fcmn) fcmn.setAttribute('x', W);
+  if(!ANIM || fmap.classList.contains('in')){
+    fclip.setAttribute('width', W);
+    placePlane(1);
+  } else {
+    fclip.setAttribute('width', 0);
+    placePlane(0);
+  }
+}
+
+function flyPlane(){
+  if(!fmap) return;
+  fmap.classList.add('in');
+  if(!ANIM){ buildFlight(); return; }
+  var W = fmap.clientWidth, t0 = 0, DUR = 2200;
+  function frame(ts){
+    if(!t0) t0 = ts;
+    var t = Math.min(1,(ts-t0)/DUR);
+    var e = t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;   /* ease-in-out */
+    fclip.setAttribute('width', W*e);   /* дуга прорисовывается вместе с полётом */
+    placePlane(e);
+    if(t < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ============ 7. АККОРДЕОН ============ */
+$$('.prog').forEach(function(ul){
+  $$('li',ul).forEach(function(li,i){ li.style.setProperty('--i', i); });
+});
+
+$$('.day-row').forEach(function(btn,idx){
   btn.addEventListener('click',function(){
-    var d=btn.parentElement, open=d.getAttribute('data-open')==='1';
-    d.setAttribute('data-open',open?'0':'1');
-    btn.setAttribute('aria-expanded',open?'false':'true');
+    var d = btn.parentElement, open = d.getAttribute('data-open') === '1';
+    d.setAttribute('data-open', open ? '0' : '1');
+    btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+    if(!open){
+      markRouteDots(idx);
+      $$('.ph',d).forEach(function(ph){ ph.classList.add('shown'); });
+    }
+    /* панель меняет высоту — геометрию линии пересчитываем после раскрытия */
+    setTimeout(function(){ layoutSpine(); updateSpine(); }, 480);
   });
 });
-var hero=document.querySelector('.hero'),st=document.getElementById('sticky'),ct=document.getElementById('contacts');
-if('IntersectionObserver' in window){
-  var heroSeen=true, contactsSeen=false;
-  function upd(){st.classList.toggle('on',!heroSeen && !contactsSeen);}
-  new IntersectionObserver(function(e){heroSeen=e[0].isIntersecting;upd();},{threshold:0}).observe(hero);
-  new IntersectionObserver(function(e){contactsSeen=e[0].isIntersecting;upd();},{threshold:.2}).observe(ct);
+
+/* ============ 8. ЛИПКАЯ ПАНЕЛЬ ============ */
+var hero = $('.hero'), st = $('#sticky'), ct = $('#contacts');
+if(st && hero && ct && 'IntersectionObserver' in window){
+  var heroSeen = true, contactsSeen = false, breathed = false;
+  var upd = function(){
+    var on = !heroSeen && !contactsSeen;
+    st.classList.toggle('on', on);
+    if(on && !breathed && ANIM){
+      breathed = true;
+      var b = $('.btn',st);
+      if(b){
+        b.classList.add('breathe');
+        setTimeout(function(){ b.classList.remove('breathe'); }, 1400);
+      }
+    }
+  };
+  new IntersectionObserver(function(e){ heroSeen = e[0].isIntersecting; upd(); },{threshold:0}).observe(hero);
+  new IntersectionObserver(function(e){ contactsSeen = e[0].isIntersecting; upd(); },{threshold:0.2}).observe(ct);
 }
+
+/* ============ СБОРКА ============ */
+function buildAll(){
+  layoutSpine();
+  updateSpine();
+  buildRoute();
+  buildFlight();
+}
+
+function boot(){
+  buildAll();
+  markRouteDots(0);                       /* первый день открыт по умолчанию */
+  $$('.day[data-open="1"] .ph').forEach(function(ph){ ph.classList.add('shown'); });
+
+  if(!ANIM){
+    if(rmap) rmap.classList.add('in');
+    if(fmap) fmap.classList.add('in');
+    if(spineFill) spineFill.style.transform = 'scaleY(1)';
+    dayNums.forEach(function(n){ n.classList.add('lit'); });
+    buildFlight();
+    runCounters();
+    return;
+  }
+  reveal(rmap, drawRoute);
+  reveal(fmap, flyPlane);
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+}
+
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', boot);
+} else { boot(); }
+
+/* шрифты и картинки меняют высоты — пересобираем геометрию */
+window.addEventListener('load', buildAll);
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(buildAll);
+
+var rt;
+window.addEventListener('resize', function(){
+  clearTimeout(rt);
+  rt = setTimeout(buildAll, 150);
+});
+})();
 </script>
 </body>
 </html>
