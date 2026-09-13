@@ -54,6 +54,54 @@ TARGETS = [
 ]
 
 
+# Files hand-checked on Commons: the exact photo that must be used for each slot.
+# The Wikipedia/Commons-search fallback below only runs if one of these disappears.
+PICKED = {
+    "hero.jpg":
+        "File:Sunshine on mosque Hassan II in Casablanca, Morocco - Flickr - Milamber's portfolio.jpg",
+    "about-fes.jpg":
+        "File:20151118 Morocco 2464 Fez sRGB (24401365321).jpg",
+    "d1-casablanca.jpg":
+        "File:Hassan II Mosque - general framing, Casablanca, Morocco.jpg",
+    "d2-volubilis.jpg":
+        "File:The Roman Ruins of Volubilis - Morocco.jpg",
+    "d3-fes.jpg":
+        "File:Fez Chouara Tannery (54239949701).jpg",
+    "d4-atlas.jpg":
+        "File:Forêt d'Ifrane.JPG",
+    "d5-marrakech.jpg":
+        "File:Jemaa el-Fnaa Marrakech at sunset.jpg",
+    "d6-essaouira.jpg":
+        "File:Fishing boats in the port of Essaouira, 2008.jpg",
+    "d7-departure.jpg":
+        "File:Mosquée de la Koutoubia - marakesh.jpg",
+    "h-casablanca.jpg":
+        "File:Casablanca (52188882913).jpg",
+    "h-fes.jpg":
+        "File:201004292848G (4783673310).jpg",
+    "h-marrakech.jpg":
+        "File:Garten Majorelle Marrakesch.jpg",
+    "price-marrakech.jpg":
+        "File:Pavilion of the Menara Gardens.jpg",
+}
+
+SUBJECTS = {
+    "hero.jpg": "Мечеть Хасана II над океаном, Касабланка",
+    "about-fes.jpg": "Ворота Баб Бу Джелуд (Синие ворота) в медине Феса",
+    "d1-casablanca.jpg": "Мечеть Хасана II и её минарет, Касабланка",
+    "d2-volubilis.jpg": "Руины римского города Волюбилис",
+    "d3-fes.jpg": "Красильни Шуара в медине Феса",
+    "d4-atlas.jpg": "Кедровый лес национального парка Ифран, Средний Атлас",
+    "d5-marrakech.jpg": "Площадь Джемаа-эль-Фна на закате, Марракеш",
+    "d6-essaouira.jpg": "Рыбацкие лодки в порту Эссувейры",
+    "d7-departure.jpg": "Мечеть Кутубия, Марракеш",
+    "h-casablanca.jpg": "Панорама Касабланки",
+    "h-fes.jpg": "Медина Феса с холма Меринидских гробниц",
+    "h-marrakech.jpg": "Сады Мажорель, Марракеш",
+    "price-marrakech.jpg": "Павильон садов Менара, Марракеш",
+}
+
+
 def get_json(url):
     req = urllib.request.Request(url, headers={"User-Agent": UA,
                                                "Accept": "application/json"})
@@ -202,7 +250,13 @@ def main():
 
     for filename, wiki_title, query in TARGETS:
         print("== %s" % filename)
-        cand = from_summary(wiki_title) if wiki_title else None
+        cand = None
+        if filename in PICKED:
+            cand = commons_file_meta(PICKED[filename])
+            if cand is None:
+                print("    pinned file unusable, falling back")
+        if cand is None and wiki_title:
+            cand = from_summary(wiki_title)
         if cand is None:
             print("    -> Commons search: %s" % query)
             cand = from_commons_search(query)
@@ -234,21 +288,59 @@ def write_credits(credits):
     out = [
         "# Источники фотографий",
         "",
-        "Все фотографии загружены с Wikimedia Commons и распространяются по свободным",
-        "лицензиям (CC BY, CC BY-SA, CC0 или Public domain).",
-        "Файлы приведены к ширине 1600 px, JPEG, качество 82.",
+        "Все фотографии загружены с [Wikimedia Commons](https://commons.wikimedia.org)",
+        "и распространяются по свободным лицензиям (CC BY, CC BY-SA, CC0 или Public domain).",
+        "Файлы приведены к ширине 1600 px, JPEG, размер каждого меньше 600 КБ.",
         "",
-        "| Файл | Автор | Лицензия | Страница файла на Commons |",
-        "| --- | --- | --- | --- |",
+        "| Файл | Сюжет | Автор | Лицензия | Страница файла на Commons |",
+        "| --- | --- | --- | --- | --- |",
     ]
     for filename, c in credits:
-        out.append("| `img/%s` | %s | %s | [%s](%s) |"
-                   % (filename, c["author"] or "—", c["licence"],
-                      c["title"].replace("File:", ""), c["page"]))
-    out.append("")
-    out.append("Сгенерировано `tools/fetch_photos.py`.")
+        out.append("| `img/%s` | %s | %s | %s | [%s](%s) |"
+                   % (filename, SUBJECTS.get(filename, "—"), c["author"] or "—",
+                      c["licence"], c["title"].replace("File:", ""), c["page"]))
+    out += [
+        "",
+        "Атрибуция для лицензий CC BY / CC BY-SA: указаны автор, название файла и",
+        "лицензия; ссылка ведёт на страницу файла на Commons с полным текстом лицензии.",
+        "",
+        "## Личное фото",
+        "",
+        "`img/svetlana.jpg` — портрет для блока «Зачем вам я». Это не фотография с Commons:",
+        "её нужно положить в `img/` вручную, вертикальный кадр, пропорции 3:4, ширина от",
+        "1200 px. `tools/fetch_photos.py` этот файл не трогает.",
+    ]
     with io.open(os.path.join(ROOT, "CREDITS.md"), "w", encoding="utf-8") as fh:
         fh.write("\n".join(out) + "\n")
+
+
+import time
+
+_get_json_once, _get_bytes_once = get_json, get_bytes
+
+
+def _with_retry(fn, url, attempts=5, pause=4):
+    """Repeat a failing request instead of skipping it (spec: retry with a pause)."""
+    last = None
+    for i in range(attempts):
+        try:
+            return fn(url)
+        except Exception as exc:                              # noqa: BLE001
+            last = exc
+            if i == attempts - 1:
+                break
+            print("    retry %d/%d in %ss (%s)" % (i + 1, attempts - 1, pause, exc))
+            time.sleep(pause)
+            pause = min(pause * 2, 30)
+    raise last
+
+
+def get_json(url):
+    return _with_retry(_get_json_once, url)
+
+
+def get_bytes(url):
+    return _with_retry(_get_bytes_once, url)
 
 
 if __name__ == "__main__":
