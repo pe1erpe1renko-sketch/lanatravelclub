@@ -14,11 +14,16 @@
 | `img/d4-atlas.jpg` | Кедровый лес национального парка Ифран, Средний Атлас | Ghottes | CC BY-SA 3.0 | [Forêt d'Ifrane.JPG](https://commons.wikimedia.org/wiki/File:For%C3%AAt_d%27Ifrane.JPG) |
 | `img/d5-marrakech.jpg` | Площадь Джемаа-эль-Фна на закате, Марракеш | Herokk | CC BY-SA 4.0 | [Jemaa el-Fnaa Marrakech at sunset.jpg](https://commons.wikimedia.org/wiki/File:Jemaa_el-Fnaa_Marrakech_at_sunset.jpg) |
 | `img/d6-essaouira.jpg` | Рыбацкие лодки в порту Эссувейры | DimiTalen | CC0 | [Fishing boats in the port of Essaouira, 2008.jpg](https://commons.wikimedia.org/wiki/File:Fishing_boats_in_the_port_of_Essaouira,_2008.jpg) |
-| `img/d7-departure.jpg` | Мечеть Кутубия, Марракеш | Baca12 | CC BY-SA 4.0 | [Mosquée de la Koutoubia - marakesh.jpg](https://commons.wikimedia.org/wiki/File:Mosqu%C3%A9e_de_la_Koutoubia_-_marakesh.jpg) |
+| `img/d7-departure.jpg` | Женщина в синем на розовой лестнице, Марракеш | предоставлено заказчиком | — | — |
 | `img/h-casablanca.jpg` | Касабланка с высоты: мечеть Хасана II и набережная | предоставлено заказчиком | — | — |
 | `img/h-fes.jpg` | Красильни Феса с высоты | предоставлено заказчиком | — | — |
 | `img/h-marrakech.jpg` | Сады Мажорель: вилла, кактусы и фонтан | предоставлено заказчиком | — | — |
-| `img/price-marrakech.jpg` | Павильон садов Менара, Марракеш | Mustang Joe | CC0 | [Pavilion of the Menara Gardens.jpg](https://commons.wikimedia.org/wiki/File:Pavilion_of_the_Menara_Gardens.jpg) |
+| `img/price-marrakech.jpg` | Марракеш на закате, минарет Кутубии | предоставлено заказчиком | — | — |
+| `img/intro-stairs.jpg` | Розовая лестница с зелёным орнаментом, Марракеш | предоставлено заказчиком | — | — |
+| `img/intro-riad.jpg` | Арка с деревянной дверью и бассейн в риаде | предоставлено заказчиком | — | — |
+| `img/d4-monkey.jpg` | Берберийская макака на розовой стене | предоставлено заказчиком | — | — |
+| `img/detail-pomegranate.jpg` | Гранаты на прилавке базара | предоставлено заказчиком | — | — |
+| `img/detail-babouches.jpg` | Жёлтые бабуши на мозаике зеллидж | предоставлено заказчиком | — | — |
 
 Атрибуция для лицензий CC BY / CC BY-SA: указаны автор, название файла и
 лицензия; ссылка ведёт на страницу файла на Commons с полным текстом лицензии.

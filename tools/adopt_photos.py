@@ -33,11 +33,22 @@ START_QUALITY = 85
 MAX_BYTES = 500 * 1024
 
 # исходное имя -> (файл в img/, сюжет для CREDITS.md)
+# Список накопительный: исходники, которых уже нет в папке, просто пропускаются,
+# поэтому скрипт можно безопасно прогонять повторно.
 MAPPING = [
-    ("IMG_6705.JPG", "about-fes.jpg",    "Рынок в медине: специи, ткани и ковры"),
-    ("IMG_6720.JPG", "h-casablanca.jpg", "Касабланка с высоты: мечеть Хасана II и набережная"),
-    ("IMG_6721.JPG", "h-fes.jpg",        "Красильни Феса с высоты"),
-    ("IMG_6708.JPG", "h-marrakech.jpg",  "Сады Мажорель: вилла, кактусы и фонтан"),
+    # первая партия
+    ("IMG_6705.JPG", "about-fes.jpg",           "Рынок в медине: специи, ткани и ковры"),
+    ("IMG_6720.JPG", "h-casablanca.jpg",        "Касабланка с высоты: мечеть Хасана II и набережная"),
+    ("IMG_6721.JPG", "h-fes.jpg",               "Красильни Феса с высоты"),
+    ("IMG_6708.JPG", "h-marrakech.jpg",         "Сады Мажорель: вилла, кактусы и фонтан"),
+    # вторая партия
+    ("IMG_6711.JPG", "intro-stairs.jpg",        "Розовая лестница с зелёным орнаментом, Марракеш"),
+    ("IMG_6709.JPG", "intro-riad.jpg",          "Арка с деревянной дверью и бассейн в риаде"),
+    ("IMG_6715.JPG", "d4-monkey.jpg",           "Берберийская макака на розовой стене"),
+    ("IMG_6714.JPG", "d7-departure.jpg",        "Женщина в синем на розовой лестнице, Марракеш"),
+    ("IMG_6713.JPG", "detail-pomegranate.jpg",  "Гранаты на прилавке базара"),
+    ("IMG_6710.JPG", "detail-babouches.jpg",    "Жёлтые бабуши на мозаике зеллидж"),
+    ("IMG_6706.JPG", "price-marrakech.jpg",     "Марракеш на закате, минарет Кутубии"),
 ]
 
 OWNER_NOTE = "предоставлено заказчиком"
@@ -93,7 +104,13 @@ def update_credits(done, dry_run=False):
         if row.search(text):
             text = row.sub(new_row, text)
         else:
-            print("  строка для %s в CREDITS.md не найдена" % filename)
+            # файла ещё нет в таблице — дописываем строку в её конец
+            rows = list(re.finditer(r"^\|.*\|$", text, re.M))
+            if rows:
+                end = rows[-1].end()
+                text = text[:end] + "\n" + new_row + text[end:]
+            else:
+                print("  таблица в CREDITS.md не найдена, строка для %s не добавлена" % filename)
 
     note = ("\n## Фотографии заказчика\n\n"
             "Снимки, помеченные «%s», предоставлены Lana Travel Club и не связаны\n"
@@ -123,7 +140,6 @@ def main():
     for source_name, filename, subject in MAPPING:
         src = find_source(args.folder, source_name)
         if not src:
-            print("!! не найден %s" % source_name)
             missing.append(source_name)
             continue
         dest = os.path.join(IMG_DIR, filename)
@@ -136,8 +152,8 @@ def main():
     if done:
         update_credits(done, args.dry_run)
     if missing:
-        print("\nНе хватает: %s" % ", ".join(missing))
-        return 1
+        print("\nПропущено (исходников нет в папке, видимо уже приняты): %s"
+              % ", ".join(missing))
     print("\nГотово: %d фотографий принято." % len(done))
     return 0
 

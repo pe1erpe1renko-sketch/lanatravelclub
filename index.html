@@ -130,6 +130,11 @@ p+p{margin-top:16px}
 .two .ph{aspect-ratio:3/4}
 .rule{height:1px;background:var(--line);margin:34px 0}
 
+/* два вертикальных кадра в ряд: разворот после первого экрана и «детали» */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.duo.wide{gap:32px}
+.duo .ph{aspect-ratio:3/4}
+
 /* days */
 .days{margin-top:8px}
 .day{border-bottom:1px solid var(--line)}
@@ -156,6 +161,8 @@ p+p{margin-top:16px}
   padding:6px 0 40px 120px;
 }
 .day-body .ph{aspect-ratio:4/3}
+.day-body .ph.tall{aspect-ratio:3/4}
+.day-photos{display:flex;flex-direction:column;gap:16px}
 .day-body h3{font-size:30px;margin-bottom:14px;line-height:1.15}
 .day-body .txt{font-size:15.5px;margin-bottom:22px}
 .tick{
@@ -218,7 +225,7 @@ p+p{margin-top:16px}
 
 /* price */
 .price{text-align:center;padding-top:70px}
-.price .ph{width:min(560px,100%);aspect-ratio:1/1;margin:0 auto 46px;border-radius:0 0 999px 999px}
+.price .ph{width:min(560px,100%);aspect-ratio:3/4;margin:0 auto 46px;border-radius:0 0 999px 999px}
 .price .lbl{display:block;margin-bottom:16px}
 .price .big{font-family:'Playfair Display',serif;font-size:clamp(52px,9vw,88px);color:var(--ink);line-height:1;margin-bottom:16px}
 .price .sub{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);margin-bottom:30px}
@@ -369,6 +376,11 @@ footer .lbl{font-size:10px;color:var(--muted)}
      .ph img уже с object-fit:cover, поэтому кадрируется, а не сплющивается */
   .hotel .ph{max-height:62vh}
   .two .ph{max-height:60vh}
+  .price .ph{max-height:60vh}
+  /* два узких вертикальных кадра рядом на телефоне читаются правильно —
+     в одну колонку не разворачиваем, только поджимаем промежуток */
+  .duo,.duo.wide{gap:12px}
+  .duo .credit{font-size:10px;letter-spacing:.1em}
   .day-row{grid-template-columns:52px 1fr 14px}
   .box,.quote{padding:30px 22px}
   .sticky .t{display:none}
@@ -584,6 +596,28 @@ footer .lbl{font-size:10px;color:var(--muted)}
   </div>
 </header>
 
+<!-- ============ INTRO DIPTYCH ============ -->
+<section class="rv" style="padding:66px 0 0">
+  <div class="wrap">
+    <div class="duo">
+      <div>
+        <figure class="ph">
+          <img src="img/intro-stairs.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+          <div class="cap"><span>Марракеш</span></div>
+        </figure>
+        <div class="credit">Марракеш</div>
+      </div>
+      <div>
+        <figure class="ph">
+          <img src="img/intro-riad.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+          <div class="cap"><span>Риад в старом городе</span></div>
+        </figure>
+        <div class="credit">Риад в старом городе</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ ABOUT ============ -->
 <section class="rv">
   <div class="wrap">
@@ -757,10 +791,16 @@ footer .lbl{font-size:10px;color:var(--muted)}
             </ul>
             <div class="transfer">Переезд Фес → Марракеш · 480 км · с остановками</div>
           </div>
-          <figure class="ph">
-            <img src="img/d4-atlas.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
-            <div class="cap"><span>Кедровый лес,<br>Средний Атлас</span></div>
-          </figure>
+          <div class="day-photos">
+            <figure class="ph">
+              <img src="img/d4-atlas.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+              <div class="cap"><span>Кедровый лес,<br>Средний Атлас</span></div>
+            </figure>
+            <figure class="ph tall">
+              <img src="img/d4-monkey.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+              <div class="cap"><span>Берберийские макаки Атласа</span></div>
+            </figure>
+          </div>
         </div></div></div>
       </div>
 
@@ -856,9 +896,9 @@ footer .lbl{font-size:10px;color:var(--muted)}
             </ul>
             <p class="note-i">После этого — завершение путешествия и вылет домой.</p>
           </div>
-          <figure class="ph">
+          <figure class="ph tall">
             <img src="img/d7-departure.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
-            <div class="cap"><span>Утро в Марракеше</span></div>
+            <div class="cap"><span>Последнее утро в Марракеше</span></div>
           </figure>
         </div></div></div>
       </div>
@@ -906,6 +946,32 @@ footer .lbl{font-size:10px;color:var(--muted)}
     <div class="box rv">
       <p class="ital">Мы смотрим на ваши даты, состав и пожелания, а не выдаём всем один и тот же вариант из каталога. Хотите риад вместо отеля — скажите заранее, это решаемо.</p>
       <a class="btn ghost" href="#contacts">Обсудить размещение</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DETAILS ============ -->
+<section class="rv" style="padding-top:20px">
+  <div class="wrap">
+    <div class="eyebrow"><span class="lbl">Детали</span></div>
+    <h2 class="sec-h2">Марокко в деталях</h2>
+    <p class="lead-i">То, что не попадает в программу, но остаётся в памяти.</p>
+
+    <div class="duo wide" style="margin-top:34px">
+      <div>
+        <figure class="ph">
+          <img src="img/detail-pomegranate.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+          <div class="cap"><span>Гранаты на базаре</span></div>
+        </figure>
+        <div class="credit">Гранаты на базаре</div>
+      </div>
+      <div>
+        <figure class="ph">
+          <img src="img/detail-babouches.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+          <div class="cap"><span>Бабуши на зеллидже</span></div>
+        </figure>
+        <div class="credit">Бабуши на зеллидже</div>
+      </div>
     </div>
   </div>
 </section>
