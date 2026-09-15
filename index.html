@@ -131,7 +131,7 @@ p+p{margin-top:16px}
 .rule{height:1px;background:var(--line);margin:34px 0}
 
 /* два вертикальных кадра в ряд: разворот после первого экрана и «детали» */
-.duo{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch}
 .duo.wide{gap:32px}
 .duo .ph{aspect-ratio:3/4}
 
@@ -274,7 +274,7 @@ p+p{margin-top:16px}
 }
 @media (hover:hover){.cbtn:hover .arr{stroke:var(--copper)}}
 .chan-row{text-align:center;margin:0 0 36px}
-.chan{display:inline-block;text-decoration:none;transition:color .3s ease}
+.chan{display:inline-block;padding:13px 8px;text-decoration:none;transition:color .3s ease}
 @media (hover:hover){
   .lbl.mute.chan:hover{color:var(--copper)}
 }
@@ -388,6 +388,11 @@ footer .lbl{font-size:10px;color:var(--muted)}
 }
 @media (max-width:480px){
   .cgrid{grid-template-columns:1fr}
+}
+@media (max-width:360px){
+  /* на 320px «Узнать свободные даты» переносилось в две строки и вылезало
+     за нижнюю кромку экрана — поджимаем набор, чтобы строка осталась одна */
+  .hero-fold .btn{padding-left:16px;padding-right:16px;letter-spacing:.14em}
 }
 
 /* ============================================================
@@ -590,8 +595,8 @@ footer .lbl{font-size:10px;color:var(--muted)}
     <div class="stats">
       <div class="stat rv"><div class="v">7</div><div class="k">дней</div></div>
       <div class="stat rv"><div class="v">4</div><div class="k">имперских города</div></div>
-      <div class="stat rv"><div class="v">≈ 1 400 км</div><div class="k">маршрута</div></div>
-      <div class="stat rv"><div class="v">103 733 ₽</div><div class="k">тур, от</div></div>
+      <div class="stat rv"><div class="v">≈ 1 400 км</div><div class="k">маршрута</div></div>
+      <div class="stat rv"><div class="v">103 733 ₽</div><div class="k">тур, от</div></div>
     </div>
   </div>
 </header>
@@ -602,14 +607,14 @@ footer .lbl{font-size:10px;color:var(--muted)}
     <div class="duo">
       <div>
         <figure class="ph">
-          <img src="img/intro-stairs.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+          <img loading="lazy" src="img/intro-stairs.jpg" alt="Розовая лестница с зелёным орнаментом, Марракеш" onerror="this.parentElement.classList.add('missing')">
           <div class="cap"><span>Марракеш</span></div>
         </figure>
         <div class="credit">Марракеш</div>
       </div>
       <div>
         <figure class="ph">
-          <img src="img/intro-riad.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+          <img loading="lazy" src="img/intro-riad.jpg" alt="Арка с деревянной дверью и бассейн в риаде" onerror="this.parentElement.classList.add('missing')">
           <div class="cap"><span>Риад в старом городе</span></div>
         </figure>
         <div class="credit">Риад в старом городе</div>
@@ -630,8 +635,8 @@ footer .lbl{font-size:10px;color:var(--muted)}
         <p>Перелёт, отели, транспорт с кондиционером, русскоговорящий гид и входные билеты собраны в единый сценарий заранее. Вам остаётся только приехать.</p>
       </div>
       <figure class="ph">
-        <img src="img/about-fes.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
-        <div class="cap"><span>Улочка медины Феса</span></div>
+        <img loading="lazy" src="img/about-fes.jpg" alt="Рынок в медине Феса: специи, ткани и ковры" onerror="this.parentElement.classList.add('missing')">
+        <div class="cap"><span>Рынок в медине Феса</span></div>
       </figure>
     </div>
   </div>
@@ -687,7 +692,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
             <div class="transfer">Внутренний осмотр мечети · по желанию · от 14 €</div>
           </div>
           <figure class="ph">
-            <img src="img/d1-casablanca.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+            <img loading="lazy" src="img/d1-casablanca.jpg" alt="Мечеть Хасана II, вид с набережной, Касабланка" onerror="this.parentElement.classList.add('missing')">
             <div class="cap"><span>Мечеть Хасана II,<br>вид с набережной</span></div>
           </figure>
         </div></div></div>
@@ -722,7 +727,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
             <div class="transfer">Переезд Касабланка → Рабат → Волюбилис → Фес · 295 км</div>
           </div>
           <figure class="ph">
-            <img src="img/d2-volubilis.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+            <img loading="lazy" src="img/d2-volubilis.jpg" alt="Руины римского города Волюбилис" onerror="this.parentElement.classList.add('missing')">
             <div class="cap"><span>Руины Волюбилиса</span></div>
           </figure>
         </div></div></div>
@@ -757,7 +762,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
             <div class="transfer">Без переездов · весь день в городе</div>
           </div>
           <figure class="ph">
-            <img src="img/d3-fes.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+            <img loading="lazy" src="img/d3-fes.jpg" alt="Красильни Шуара в медине Феса" onerror="this.parentElement.classList.add('missing')">
             <div class="cap"><span>Красильни Феса</span></div>
           </figure>
         </div></div></div>
@@ -793,11 +798,11 @@ footer .lbl{font-size:10px;color:var(--muted)}
           </div>
           <div class="day-photos">
             <figure class="ph">
-              <img src="img/d4-atlas.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+              <img loading="lazy" src="img/d4-atlas.jpg" alt="Кедровый лес Среднего Атласа" onerror="this.parentElement.classList.add('missing')">
               <div class="cap"><span>Кедровый лес,<br>Средний Атлас</span></div>
             </figure>
             <figure class="ph tall">
-              <img src="img/d4-monkey.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+              <img loading="lazy" src="img/d4-monkey.jpg" alt="Берберийская макака на розовой стене" onerror="this.parentElement.classList.add('missing')">
               <div class="cap"><span>Берберийские макаки Атласа</span></div>
             </figure>
           </div>
@@ -833,7 +838,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
             <div class="transfer">Без переездов · весь день в городе</div>
           </div>
           <figure class="ph">
-            <img src="img/d5-marrakech.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+            <img loading="lazy" src="img/d5-marrakech.jpg" alt="Площадь Джемаа-эль-Фна на закате, Марракеш" onerror="this.parentElement.classList.add('missing')">
             <div class="cap"><span>Джемаа-эль-Фна<br>на закате</span></div>
           </figure>
         </div></div></div>
@@ -868,7 +873,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
             <div class="transfer">Марракеш → Эссувейра → Марракеш · 200 км в одну сторону</div>
           </div>
           <figure class="ph">
-            <img src="img/d6-essaouira.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+            <img loading="lazy" src="img/d6-essaouira.jpg" alt="Рыбацкие лодки в порту Эссувейры" onerror="this.parentElement.classList.add('missing')">
             <div class="cap"><span>Порт Эссувейры</span></div>
           </figure>
         </div></div></div>
@@ -897,7 +902,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
             <p class="note-i">После этого — завершение путешествия и вылет домой.</p>
           </div>
           <figure class="ph tall">
-            <img src="img/d7-departure.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+            <img loading="lazy" src="img/d7-departure.jpg" alt="Женщина в синем на розовой лестнице, Марракеш" onerror="this.parentElement.classList.add('missing')">
             <div class="cap"><span>Последнее утро в Марракеше</span></div>
           </figure>
         </div></div></div>
@@ -921,21 +926,21 @@ footer .lbl{font-size:10px;color:var(--muted)}
 
     <div class="hotels">
       <div class="hotel rv">
-        <figure class="ph"><img src="img/h-casablanca.jpg" alt="" onerror="this.parentElement.classList.add('missing')"><div class="cap"><span>Касабланка</span></div></figure>
+        <figure class="ph"><img loading="lazy" src="img/h-casablanca.jpg" alt="Касабланка с высоты: мечеть Хасана II и набережная" onerror="this.parentElement.classList.add('missing')"><div class="cap"><span>Касабланка</span></div></figure>
         <span class="lbl">1 ночь</span>
         <h3>Касабланка</h3>
         <p>Первая ночь после перелёта — рядом с центром, чтобы утром не терять времени.</p>
         <span class="tag">Подбирается под вас</span>
       </div>
       <div class="hotel rv">
-        <figure class="ph"><img src="img/h-fes.jpg" alt="" onerror="this.parentElement.classList.add('missing')"><div class="cap"><span>Фес</span></div></figure>
+        <figure class="ph"><img loading="lazy" src="img/h-fes.jpg" alt="Красильни Феса с высоты" onerror="this.parentElement.classList.add('missing')"><div class="cap"><span>Фес</span></div></figure>
         <span class="lbl">2 ночи</span>
         <h3>Фес</h3>
         <p>Две ночи у старейшей медины мира. По желанию — риад в старом городе вместо сетевого отеля.</p>
         <span class="tag">Подбирается под вас</span>
       </div>
       <div class="hotel rv">
-        <figure class="ph"><img src="img/h-marrakech.jpg" alt="" onerror="this.parentElement.classList.add('missing')"><div class="cap"><span>Марракеш</span></div></figure>
+        <figure class="ph"><img loading="lazy" src="img/h-marrakech.jpg" alt="Сады Мажорель: синяя вилла, кактусы и фонтан" onerror="this.parentElement.classList.add('missing')"><div class="cap"><span>Марракеш</span></div></figure>
         <span class="lbl">3 ночи</span>
         <h3>Марракеш</h3>
         <p>База на три ночи: отсюда выезжаем к океану и возвращаемся к ужину.</p>
@@ -960,14 +965,14 @@ footer .lbl{font-size:10px;color:var(--muted)}
     <div class="duo wide" style="margin-top:34px">
       <div>
         <figure class="ph">
-          <img src="img/detail-pomegranate.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+          <img loading="lazy" src="img/detail-pomegranate.jpg" alt="Гранаты на прилавке базара" onerror="this.parentElement.classList.add('missing')">
           <div class="cap"><span>Гранаты на базаре</span></div>
         </figure>
         <div class="credit">Гранаты на базаре</div>
       </div>
       <div>
         <figure class="ph">
-          <img src="img/detail-babouches.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+          <img loading="lazy" src="img/detail-babouches.jpg" alt="Жёлтые бабуши на мозаике зеллидж" onerror="this.parentElement.classList.add('missing')">
           <div class="cap"><span>Бабуши на зеллидже</span></div>
         </figure>
         <div class="credit">Бабуши на зеллидже</div>
@@ -1016,7 +1021,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
       </div>
       <div>
         <div class="k">Ориентировочно</div>
-        <div class="v">73 995 ₽</div>
+        <div class="v">73 995 ₽</div>
         <div class="s">на человека, туда и обратно</div>
       </div>
     </div>
@@ -1078,7 +1083,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
       <div>
         <span class="lbl mute">Оплачивается отдельно</span>
         <ul class="inc plain">
-        <li><span>Международный авиабилет, ≈ 73 995 ₽</span></li>
+        <li><span>Международный авиабилет, ≈ 73 995 ₽</span></li>
         <li><span>Таксовый сбор 25 € с человека, на месте</span></li>
         <li><span>Напитки за ужином</span></li>
         <li><span>Личные расходы</span></li>
@@ -1105,7 +1110,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
       </div>
       <div class="side">
         <figure class="ph">
-          <img src="img/svetlana.jpg" alt="Светлана Александрова, Lana Travel Club" onerror="this.parentElement.classList.add('missing')">
+          <img loading="lazy" src="img/svetlana.jpg" alt="Светлана Александрова, Lana Travel Club" onerror="this.parentElement.classList.add('missing')">
           <div class="cap"><span>Светлана Александрова</span></div>
         </figure>
         <span class="lbl who">Светлана Александрова · Lana Travel Club</span>
@@ -1122,14 +1127,14 @@ footer .lbl{font-size:10px;color:var(--muted)}
 <section class="price rv">
   <div class="wrap">
     <figure class="ph">
-      <img src="img/price-marrakech.jpg" alt="" onerror="this.parentElement.classList.add('missing')">
+      <img loading="lazy" src="img/price-marrakech.jpg" alt="Марракеш на закате, минарет Кутубии" onerror="this.parentElement.classList.add('missing')">
       <div class="cap"><span>Закат над Марракешем</span></div>
     </figure>
     <span class="lbl">Ориентировочная стоимость тура</span>
-    <div class="big">от 103 733 ₽</div>
+    <div class="big">от 103 733 ₽</div>
     <div class="sub">на человека · ½ двухместного номера · отели 3*, полупансион</div>
-    <p class="addon">+ перелёт Royal Air Maroc ≈ 73 995 ₽, оплачивается отдельно</p>
-    <div class="total"><span class="lbl mute">Итого с перелётом ≈ 177 700 ₽ на человека</span></div>
+    <p class="addon">+ перелёт Royal Air Maroc ≈ 73 995 ₽, оплачивается отдельно</p>
+    <div class="total"><span class="lbl mute">Итого с перелётом ≈ 177 700 ₽ на человека</span></div>
     <p class="fine">Стоимость ориентировочная и зависит от дат заезда и курса. Одноместное размещение — по запросу.</p>
     <a class="btn copper" href="#contacts">Посчитать на мои даты</a>
   </div>
@@ -1148,7 +1153,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
       </a>
       <a class="cbtn rv" href="https://wa.me/79219086624">
         <svg class="ico ico-f" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5-4.5-.2-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.5-.3.3c-.1.1-.2.3 0 .5.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.2.1.4.1.5-.1l.7-.9c.2-.2.3-.2.5-.1l2 .9c.2.1.4.2.4.3.1.2.1.6-.1 1.1z"/></svg>
-        <span><span class="t">WhatsApp</span><span class="s">+7 921 908 66 24</span></span>
+        <span><span class="t">WhatsApp</span><span class="s">+7 921 908 66 24</span></span>
         <svg class="arr" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 1.5 8 6l-4.5 4.5"/></svg>
       </a>
       <a class="cbtn rv" href="https://www.instagram.com/lanatravelclub">
@@ -1177,7 +1182,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
 <div class="wrap">
   <footer>
     <div class="logo">
-      <img class="footlogo" src="img/logo.png" alt="Lana Travel Club" onerror="this.parentElement.classList.add('nologo')">
+      <img loading="lazy" class="footlogo" src="img/logo.png" alt="Lana Travel Club" onerror="this.parentElement.classList.add('nologo')">
       <span class="logotext">LANATRAVEL<small>Сценарист ваших путешествий</small></span>
     </div>
     <span class="lbl">Марокко · 7 дней</span>
@@ -1186,7 +1191,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
 
 <!-- ============ STICKY ============ -->
 <div class="sticky" id="sticky">
-  <div class="t"><b>Марокко · 7 дней</b>от 103 733 ₽ + перелёт</div>
+  <div class="t"><b>Марокко · 7 дней</b>от 103 733 ₽ + перелёт</div>
   <a class="btn copper" href="#contacts">Узнать даты и цену</a>
 </div>
 
