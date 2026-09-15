@@ -94,10 +94,17 @@ img{display:block;max-width:100%}
 
 /* hero */
 .top{
-  text-align:center;padding:22px 0 0;
+  text-align:center;padding:6px 0 0;
 }
-.top .lbl{color:var(--muted)}
-.top::after{content:'';display:block;width:min(720px,80%);height:1px;background:var(--line);margin:18px auto 0}
+/* логотип уже содержит подпись «Сценарист ваших путешествий»;
+   текстовая строка — только запасной вариант, если картинка не загрузилась */
+.top .toplogo{display:block;width:220px;max-width:72%;height:auto;margin:0 auto}
+.top .lbl{color:var(--muted);display:none}
+.top.nologo .toplogo{display:none}
+.top.nologo .lbl{display:inline-block}
+.top.nologo{padding-top:22px}
+.top::after{content:'';display:block;width:min(720px,80%);height:1px;background:var(--line);margin:7px auto 0}
+.top.nologo::after{margin-top:18px}
 .hero{text-align:center;padding:52px 0 40px}
 .hero .ital{color:var(--copper);font-size:20px;margin-bottom:8px}
 .hero h1{font-size:clamp(56px,11vw,116px);line-height:1;margin-bottom:14px}
@@ -188,7 +195,8 @@ p+p{margin-top:16px}
   border:1px solid var(--line);display:grid;grid-template-columns:1.2fr 1fr 1fr 1.2fr;
   margin-top:34px;
 }
-.flight > div{padding:26px 24px;border-right:1px solid var(--line)}
+.flight > div{padding:26px 24px;border-right:1px solid var(--line);min-width:0}
+.flight .v{overflow-wrap:break-word}
 .flight > div:last-child{border-right:0}
 .flight .k{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
 .flight .v{font-family:'Playfair Display',serif;font-size:24px;color:var(--ink);line-height:1.15}
@@ -271,6 +279,10 @@ footer{
   display:flex;justify-content:space-between;align-items:center;gap:16px;
 }
 .logo{font-family:'Playfair Display',serif;font-size:19px;letter-spacing:.16em;color:var(--copper);line-height:1}
+.logo .footlogo{display:block;width:180px;max-width:100%;height:auto}
+.logo .logotext{display:none}
+.logo.nologo .footlogo{display:none}
+.logo.nologo .logotext{display:block}
 .logo small{display:block;font-family:'Manrope',sans-serif;font-size:8px;letter-spacing:.3em;color:var(--muted);margin-top:5px}
 footer .lbl{font-size:10px;color:var(--muted)}
 
@@ -299,6 +311,8 @@ footer .lbl{font-size:10px;color:var(--muted)}
   .why-two .side{order:-1}
   .why-two .ph{max-width:340px;margin:0 auto}
   .flight{grid-template-columns:1fr 1fr}
+  .flight > div{padding:22px 16px}
+  .flight .v{font-size:20px}
   .flight > div:nth-child(2){border-right:0}
   .flight > div:nth-child(-n+2){border-bottom:1px solid var(--line)}
 }
@@ -326,9 +340,31 @@ footer .lbl{font-size:10px;color:var(--muted)}
   body{font-size:16px}
   section{padding:60px 0}
   .wrap{padding:0 20px}
-  .hero{padding:40px 0 28px}
-  .hero .lbl{letter-spacing:.24em;font-size:10px}
-  .hero .route{letter-spacing:.18em;font-size:10px;line-height:2}
+
+  /* ---- первый экран целиком в видимой области ----
+     .top фиксирован по высоте той же переменной, из которой вычитается
+     высота сгиба, поэтому расчёт сходится и с логотипом, и без него */
+  :root{--top-h:64px}
+  .top,.top.nologo{height:var(--top-h);padding-top:10px;box-sizing:border-box;overflow:hidden}
+  .top .toplogo{width:150px}
+  .top::after,.top.nologo::after{margin-top:8px}
+
+  .hero{min-height:100vh;min-height:100svh;padding:24px 0 20px}
+  .hero-fold{
+    display:flex;flex-direction:column;justify-content:center;
+    min-height:calc(100svh - var(--top-h) - 24px);padding-bottom:20px;
+  }
+  .hero-fold > *{width:100%;flex:none}
+  .hero-fold .btn{width:auto;align-self:center}
+  .hero h1{font-size:clamp(42px,13vw,64px)}
+  .hero .lbl{letter-spacing:.24em;font-size:10px;margin-bottom:18px}
+  /* арка ужимается, если экран совсем низкий: кнопка важнее фото */
+  .hero .ph{
+    width:100%;aspect-ratio:auto;height:38svh;max-height:38svh;
+    flex:0 1 auto;min-height:100px;margin:0 auto 18px;
+  }
+  .hero .route{letter-spacing:.12em;font-size:9px;line-height:1.6;margin-bottom:20px}
+  .stats{margin-top:0}
   .day-row{grid-template-columns:52px 1fr 14px}
   .box,.quote{padding:30px 22px}
   .sticky .t{display:none}
@@ -360,6 +396,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
 
 /* --- 1. загрузка hero --- */
 .anim .top .lbl,
+.anim .top .toplogo,
 .anim .hero .ital,
 .anim .hero h1,
 .anim .hero > .wrap > .lbl,
@@ -369,7 +406,8 @@ footer .lbl{font-size:10px;color:var(--muted)}
 .anim .hero .ph{clip-path:inset(100% 0 0 0)}
 .anim .hero .ph img{transform:scale(1.06)}
 
-.anim.loaded .top .lbl{opacity:1;transition:opacity .4s var(--ease)}
+.anim.loaded .top .lbl,
+.anim.loaded .top .toplogo{opacity:1;transition:opacity .4s var(--ease)}
 .anim.loaded .hero .ital,
 .anim.loaded .hero > .wrap > .lbl:not(.route){opacity:1;transition:opacity .7s var(--ease) .1s}
 .anim.loaded .hero h1{
@@ -496,7 +534,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
   }
   html{scroll-behavior:auto}
   .rv,.ph img,.prog li,.routemap .rdot,.routemap .rlabel,
-  .flightmap .fplane-g,.hero .ital,.hero h1,.hero .lbl,.hero .route,.top .lbl{
+  .flightmap .fplane-g,.hero .ital,.hero h1,.hero .lbl,.hero .route,.top .lbl,.top .toplogo{
     opacity:1 !important;transform:none !important;
   }
   .hero .ph{clip-path:none !important}
@@ -511,11 +549,15 @@ footer .lbl{font-size:10px;color:var(--muted)}
 </head>
 <body>
 
-<div class="top"><span class="lbl">Сценарист ваших путешествий</span></div>
+<div class="top">
+  <img class="toplogo" src="img/logo.png" alt="Lana Travel Club — сценарист ваших путешествий" onerror="this.parentElement.classList.add('nologo')">
+  <span class="lbl">Сценарист ваших путешествий</span>
+</div>
 
 <!-- ============ HERO ============ -->
 <header class="hero">
   <div class="wrap">
+    <div class="hero-fold">
     <div class="ital">авторское путешествие</div>
     <h1>Марокко</h1>
     <span class="lbl">Семь дней по имперским городам</span>
@@ -527,6 +569,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
 
     <span class="lbl route">Касабланка · Рабат · Фес · Марракеш · Эссувейра</span>
     <a class="btn" href="#contacts">Узнать свободные даты</a>
+    </div><!-- /.hero-fold -->
 
     <div class="stats">
       <div class="stat rv"><div class="v">7</div><div class="k">дней</div></div>
@@ -543,7 +586,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
     <div class="eyebrow"><span class="lbl">О путешествии</span></div>
     <div class="two">
       <div>
-        <h2 class="sec-h2">Страна, которую<br>не смотрят. Её проживают.</h2>
+        <h2 class="sec-h2">Четыре столицы, океан<br>и горы за семь дней</h2>
         <p class="lead-i">Четыре города, каждый из которых когда-то был столицей королевства. Океан, Атлас, медина, в которой не работает навигатор.</p>
         <p>За один день вы проходите через римские развалины, королевский дворец и средневековые улочки, где ничего не изменилось за восемьсот лет. Вечером — мятный чай на крыше. Утром — дорога через кедровый лес.</p>
         <p>Перелёт, отели, транспорт с кондиционером, русскоговорящий гид и входные билеты собраны в единый сценарий заранее. Вам остаётся только приехать.</p>
@@ -560,7 +603,7 @@ footer .lbl{font-size:10px;color:var(--muted)}
 <section class="rv" style="padding-top:20px">
   <div class="wrap">
     <div class="eyebrow"><span class="lbl">Маршрут</span></div>
-    <h2 class="sec-h2">Семь дней по дням</h2>
+    <h2 class="sec-h2">Маршрут по дням</h2>
     <p class="lead-i" style="margin-bottom:10px">Нажмите на день — откроется программа и фотографии.</p>
 
     <div class="route-wrap">
@@ -657,8 +700,8 @@ footer .lbl{font-size:10px;color:var(--muted)}
         </button>
         <div class="panel"><div class="panel-in"><div class="day-body">
           <div>
-            <h3>День, ради которого едут</h3>
-            <p class="txt">Девять тысяч улочек, в которых не работает навигатор. Ремесленники работают по той же технологии, что их прадеды, и увидеть это можно только здесь. Целый день с гидом — иначе тут просто нельзя.</p>
+            <h3>Целый день в старейшей медине мира</h3>
+            <p class="txt">Медина — старый город внутри крепостных стен, куда не проедет машина. В Фесе это девять тысяч улочек, в которых не работает навигатор, и грузы до сих пор возят на ослах. Ремесленники работают по той же технологии, что их прадеды. Целый день с гидом — иначе тут просто нельзя.</p>
             <ul class="prog">
               <li><svg class="tick" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.4 5.4 10.8 12 3.6"/></svg>
                 <span><b>Фес-эль-Бали</b><small>крупнейшая в мире пешеходная средневековая зона, девять тысяч улочек, грузы до сих пор возят на ослах</small></span>
@@ -1063,7 +1106,10 @@ footer .lbl{font-size:10px;color:var(--muted)}
 
 <div class="wrap">
   <footer>
-    <div class="logo">LANATRAVEL<small>Сценарист ваших путешествий</small></div>
+    <div class="logo">
+      <img class="footlogo" src="img/logo.png" alt="Lana Travel Club" onerror="this.parentElement.classList.add('nologo')">
+      <span class="logotext">LANATRAVEL<small>Сценарист ваших путешествий</small></span>
+    </div>
     <span class="lbl">Марокко · 7 дней</span>
   </footer>
 </div>
